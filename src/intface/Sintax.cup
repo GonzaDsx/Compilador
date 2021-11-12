@@ -26,7 +26,8 @@ terminal T_dato, Cadena, Si, Si_No, Caso, Mientras, Ciclo,
 non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_CICLO, SI, SI_NO, ACCION,
     MIENTRAS, CICLO, SENTENCIA_BOOLEANA, SENTENCIA_CICLO, RECORRIDO, METODO,
     SENTENCIA_CLASE, FUNCION, OPERACION, ERRORES_INIT, ERRORES_DEC, ERRORES_SI, 
-    ERRORES_SINO, ERRORES_MIENTRAS, ERRORES_CICLO, ERRORES_REC, ERRORES_FUNC;
+    ERRORES_SINO, ERRORES_MIENTRAS, ERRORES_CICLO, ERRORES_REC, ERRORES_FUNC,
+    ENDMETODO;
 
 start with INICIO;
 
@@ -90,11 +91,11 @@ DECLARACION ::=  //check
         Feel.Lineas.add(Dlc);
     :} |     
          
-    Recorrido:td Identificador:id P_coma :s{:
+    /*Recorrido:td Identificador:id P_coma :s{:
         f.crearObjeto(id,td,0,idright,idleft);
         LineasCodigo Dlc = new LineasCodigo(id);
         Feel.Lineas.add(Dlc);
-    :} |                                         
+    :} |*/                                         
 
     T_dato:td Identificador:id P_coma :s{:            
         f.crearObjeto(id,td,null,idright,idleft);      
@@ -129,11 +130,11 @@ DECLARACION ::=  //check
         Feel.Lineas.add(Dlc);
     :} SENTENCIA |     
 
-    Recorrido:td Identificador:id P_coma:s{:
+    /*Recorrido:td Identificador:id P_coma:s{:
         f.crearObjeto(id,td,0,idright,idleft);   
         LineasCodigo Dlc = new LineasCodigo(id);
         Feel.Lineas.add(Dlc);
-    :} SENTENCIA |        
+    :} SENTENCIA |        */
   
     ERRORES_DEC
 ;
@@ -355,34 +356,70 @@ DECLARACION_CICLO ::=
     :}
 ;
 RECORRIDO ::=    
-    Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma :s{: 
-        
-    :} | 
-    Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma SENTENCIA :s{: 
-        
-    :} |  
-    Recorrido:td Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma :s{:         
-        f.crearObjeto(id,td,null,idright,idleft);
-        f.setUsingRec(id);
-    :} |        
-    Recorrido:td Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma SENTENCIA :s{: 
-        f.crearObjeto();
-    :} |   
+    Identificador:id Igual Llave_a METODO Llave_c P_coma |
+    Identificador:id Igual Llave_a METODO Llave_c P_coma SENTENCIA |
+
+    Recorrido:td Identificador:id Igual Llave_a :s{: 
+        f.crearObjeto(id,td,1,idright,idleft); 
+    :} METODO |
     ERRORES_REC
 ;
 METODO ::=
-    Encender Parentesis_a Parentesis_c P_coma |
-    Apagar Parentesis_a Parentesis_c P_coma | 
-    Retroceder Parentesis_a Parentesis_c P_coma |
-    Avanzar Parentesis_a Parentesis_c P_coma |
-    RotarR Parentesis_a Parentesis_c P_coma |
-    RotarL Parentesis_a Parentesis_c P_coma |
-    Encender Parentesis_a Parentesis_c P_coma METODO |
-    Apagar Parentesis_a Parentesis_c P_coma METODO | 
-    Retroceder Parentesis_a Parentesis_c P_coma METODO |
-    Avanzar Parentesis_a Parentesis_c P_coma METODO |
-    RotarR Parentesis_a Parentesis_c P_coma METODO |
-    RotarL Parentesis_a Parentesis_c P_coma METODO
+    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+    Apagar:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO | 
+    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+    Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+    RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+    RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+    Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} ENDMETODO |
+
+
+    Encender:m Parentesis_a Parentesis_c P_coma:s{:
+        f.addMetodoRec(m);
+    :} METODO |
+    Apagar:m Parentesis_a Parentesis_c P_coma:s{:
+        f.addMetodoRec(m);
+    :} METODO | 
+    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} METODO |
+    Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} METODO |
+    RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} METODO |
+    RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} METODO|
+    Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        f.addMetodoRec(m);
+    :} METODO
+
+;
+
+ENDMETODO ::=
+    Llave_c P_coma:p{: 
+        f.endAsign(); 
+    :} SENTENCIA |
+    
+    Llave_c P_coma:p{: 
+        f.endAsign(); 
+    :}
 ;
 
 FUNCION ::=

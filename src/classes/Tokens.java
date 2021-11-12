@@ -48,5 +48,5 @@ public enum Tokens {
     Inicio,
     Punto,
     Texto,
-    ERROR
+    ERROR    
 }

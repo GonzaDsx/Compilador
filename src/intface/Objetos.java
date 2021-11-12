@@ -20,7 +20,7 @@ public class Objetos {
     private int linea;
     private int columna;
     
-    private ArrayList Metodos;
+    private ArrayList<Object> Metodos = new ArrayList<Object>();
 
     public Objetos() {
         this.Nombre = null;
@@ -33,7 +33,7 @@ public class Objetos {
         this.tipo = tipo;
         this.valor = null;
         this.linea = linea;
-        this.columna = columna;
+        this.columna = columna;        
     }
 
     public Objetos(Object Nombre, Object tipo, Object valor, int linea, int columna) {
@@ -82,5 +82,13 @@ public class Objetos {
 
     public void setColumna(int columna) {
         this.columna = columna;
+    }
+    
+    public void addMetodo(Object m){
+        this.Metodos.add(m);
+    }
+    
+    public Object getMetodo(int p){
+        return Metodos.get(p);
     }
 }

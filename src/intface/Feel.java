@@ -67,7 +67,8 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<Errores> Errores = new ArrayList<>();//Almacena todos los errores que se van recuperando de los analisis sintactico y semantico.
     public static ArrayList<Objetos> Objetos = new ArrayList<Objetos>(); //Cada una de las variables que se van creando
     public static ArrayList<LineasCodigo> Lineas = new ArrayList<LineasCodigo>();
-    private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
+    //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
+    private Objetos tempRec;
 
     public Feel() {
         initComponents();
@@ -140,11 +141,11 @@ public class Feel extends javax.swing.JFrame {
                     if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
                         if (text.substring(wordL, wordR).matches("(\\W)*(entero|decimal|cadena|booleano|recorrido)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attpurple, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(encender|apagar|avanzar|retroceder|rotarL|rotarR)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(encender|apagar|avanzar|retroceder|rotarL|rotarR|detener)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attblue, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(si|sino|ciclo|mientras|caso)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attorange, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(func|clase)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(func|clase|start)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attorange, false);
                         } else if (text.substring(wordL, wordR).matches("\\W*[0|1|2|3|4|5|6|7|8|9]+")) {
                             setCharacterAttributes(wordL + 1, wordR - wordL + 1, attnumbers, false);
@@ -539,6 +540,9 @@ public class Feel extends javax.swing.JFrame {
             if (td.toString().equals("recorrido")) {
                 Objetos o = new Objetos(id, td, linea, columna);
                 Objetos.add(o);
+                if(val.toString().equals("1")){
+                    setUsingRec(o);
+                }
             } else {
                 Objetos o = new Objetos(id, td, val, linea, columna);
                 Objetos.add(o);
@@ -546,8 +550,16 @@ public class Feel extends javax.swing.JFrame {
         }
     }
 
-    private void setUsingRec() {
-
+    private void setUsingRec(Objetos o) {
+        this.tempRec = o;        
+    }
+    
+    public void endAsign(){
+        this.tempRec = null;
+    }
+    
+    public void addMetodoRec(Object metodo){
+        this.tempRec.addMetodo(metodo+"()");
     }
 
     private int verifDeclaracion(Object id) {

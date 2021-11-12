@@ -1,0 +1,474 @@
+package intface;
+
+import java_cup.runtime.Symbol;
+
+
+parser code
+{:    
+    private Symbol s;    
+
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){        
+        return this.s;
+    }
+:};
+
+terminal T_dato, Cadena, Si, Si_No, Caso, Mientras, Ciclo,
+    Igual, Op_logico, Op_relacional, Op_asignacion, Op_incremento, 
+    Op_booleano, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Clase, Punto, 
+    P_coma, Identificador, Numero, Recorrido, Func, Encender, Apagar, Start,
+    Avanzar, Detener, Retroceder, RotarR, RotarL, Texto, TextoSA, TextoSC,
+    ERROR;
+
+non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_CICLO, SI, SI_NO, ACCION,
+    MIENTRAS, CICLO, SENTENCIA_BOOLEANA, SENTENCIA_CICLO, RECORRIDO, METODO,
+    SENTENCIA_CLASE, FUNCION, OPERACION, ERRORES_INIT, ERRORES_DEC, ERRORES_SI, 
+    ERRORES_SINO, ERRORES_MIENTRAS, ERRORES_CICLO, ERRORES_REC, ERRORES_FUNC;
+
+start with INICIO;
+
+INICIO ::=         
+    SENTENCIA_CLASE | ERRORES_INIT
+;
+
+SENTENCIA_CLASE ::=
+    Clase:td Identificador:id Llave_a Llave_c :s{:            
+        Objetos o = new Objetos(id,td,idright,idleft);        
+        Feel.Objetos.add(o);        
+    :} | 
+    Clase:td Identificador:id Llave_a :s{:
+        f.crearObjeto(id,td,null,idright,idleft);        
+    :} SENTENCIA Llave_c 
+ 
+; 
+
+SENTENCIA ::=     
+    DECLARACION |    
+    SI |           
+    MIENTRAS |    
+    CICLO |
+    RECORRIDO |
+    FUNCION |
+    OPERACION |
+    ACCION
+;
+
+DECLARACION ::=  //check
+    T_dato:td Identificador:id P_coma :s{:                    
+        f.crearObjeto(id,td,null,idright,idleft);        
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " 0");
+        Feel.Lineas.add(Dlc);
+    :} |
+
+    T_dato:td Identificador:id Igual:op Numero:val P_coma :s{:            
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " "+ val);
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    T_dato:td Identificador:id Igual:op Op_booleano:val P_coma :s{:            
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);      
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " "+ val);
+        Feel.Lineas.add(Dlc);
+    :} |
+
+    Cadena:td Identificador:id P_coma :s{:
+        f.crearObjeto(id,td,null,idright,idleft);         
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " 0");
+        Feel.Lineas.add(Dlc);
+    :} |           
+
+    Cadena:td Identificador:id Igual:op Texto:val P_coma :s{:
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + val);
+        Feel.Lineas.add(Dlc);
+    :} |     
+         
+    Recorrido:td Identificador:id P_coma :s{:
+        f.crearObjeto(id,td,0,idright,idleft);
+        LineasCodigo Dlc = new LineasCodigo(id);
+        Feel.Lineas.add(Dlc);
+    :} |                                         
+
+    T_dato:td Identificador:id P_coma :s{:            
+        f.crearObjeto(id,td,null,idright,idleft);      
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " 0");
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |    
+
+    T_dato:td Identificador:id Igual:op Numero:val P_coma:s{:            
+        f.crearObjeto(id,td,val,idright,idleft); 
+        f.verificarTipo(td,val,idright);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db " + val);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+
+    T_dato:td Identificador:id Igual:op Op_booleano:val P_coma:pc{:
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db " + val);
+        Feel.Lineas.add(Dlc);        
+    :} SENTENCIA |
+    
+    Cadena:td Identificador:id P_coma:s{:
+        f.crearObjeto(id,td,null,idright,idleft);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db" + " 0");
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |     
+
+    Cadena:td Identificador:id Igual:op Texto:val P_coma:s{:
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);
+        LineasCodigo Dlc = new LineasCodigo(id + " " + "db " + val +"$");
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |     
+
+    Recorrido:td Identificador:id P_coma:s{:
+        f.crearObjeto(id,td,0,idright,idleft);   
+        LineasCodigo Dlc = new LineasCodigo(id);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |        
+  
+    ERRORES_DEC
+;
+
+OPERACION ::=
+    Identificador:id Igual:op Numero:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);
+        LineasCodigo Dlc = new LineasCodigo("MOV " + id + "," + val);
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    Identificador:id Igual:op Numero:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);
+        LineasCodigo Dlc = new LineasCodigo("MOV " + id + "," + val);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    
+    Identificador:id Op_asignacion:op Numero:val P_coma :s{:
+        f.agregarValor(id,op,val,idright+1);
+        LineasCodigo Dlc = new LineasCodigo("MOV " + id + ","  + val);
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    Identificador:id Op_asignacion:op Numero:val P_coma :s{:
+        f.agregarValor(id,op,val,idright+1);
+        LineasCodigo Dlc = new LineasCodigo("MOV " + id + "," + val);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    
+    Identificador:id Op_incremento:op P_coma :s{:
+        f.agregarValor(id,op,null,idright+1);
+        LineasCodigo Dlc;
+        if(op.equals("++")){
+             Dlc = new LineasCodigo("INC " + "," + id);   
+        }else{
+             Dlc = new LineasCodigo("DEC " + ","  + id);
+        }
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    Identificador:id Op_incremento:op P_coma :s{:
+        boolean b = false;
+        f.agregarValor(id,op,null,idright+1);
+        LineasCodigo Dlc;
+        if(op.equals("++")){
+             Dlc = new LineasCodigo("INC " + "," + id);   
+        }else{
+             Dlc = new LineasCodigo("DEC " + "," + id);
+        }
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    
+    Identificador:id Igual:op Texto:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);
+        LineasCodigo Dlc;
+         Dlc = new LineasCodigo("MOV " + " " + id + ","  + val);
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    Identificador:id Igual:op Texto:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);            
+        LineasCodigo Dlc;
+         Dlc = new LineasCodigo("MOV " + " " + id + ","  + val);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    
+    Identificador:id Igual:op Op_booleano:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);        
+        LineasCodigo Dlc;
+        if(val.equals("verdadero")){
+             Dlc = new LineasCodigo("MOV " + " " + id + ","  + "1");
+        }else{
+             Dlc = new LineasCodigo("MOV " + " " + id + "," + "0");
+        }
+        Feel.Lineas.add(Dlc);
+    :} |
+    
+    Identificador:id Igual:op Op_booleano:val P_coma :s{:
+        f.añadirValor(id,val,idright+1);
+        LineasCodigo Dlc;
+        if(val.equals("verdadero")){
+             Dlc = new LineasCodigo("MOV " + " " + id + ","  + "1");
+        }else{
+             Dlc = new LineasCodigo("MOV " + " " + id + ","  + "0");
+        }
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA
+;
+
+SI ::=     
+    Si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c |
+    Si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c SI_NO |
+    Si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA
+;
+SENTENCIA_BOOLEANA ::= 
+    Op_booleano | 
+    Identificador:id Op_relacional:op Op_booleano :val{:  
+        f.verifCondicion(id,op,val,idright);
+        LineasCodigo Dlc;
+        if(op.equals(">") && val.equals("verdadero")){
+            Dlc = new LineasCodigo("JG mayor \n mayor: \n MOV " + id + " , 1");
+        }else if(op.equals(">") && val.equals("falso")){
+            Dlc = new LineasCodigo("JG mayor \n mayor: \n MOV " + id + " , 0");
+        }else if(op.equals("<") && val.equals("verdadero")){
+            Dlc = new LineasCodigo("JL menor \n menor: \n MOV " + id + " , 1");
+        }else if(op.equals("<") && val.equals("falso")){
+            Dlc = new LineasCodigo("JL menor \n menor: \n MOV " + id + " , 0");
+        }else if(op.equals("==") && val.equals("verdadero")){
+            Dlc = new LineasCodigo("JE igual \n igual: \n MOV " + id + " , 1");
+        }else if(op.equals("==") && val.equals("falso")){
+            Dlc = new LineasCodigo("JE igual \n igual: \n MOV " + id + " , 0");
+        }else if(op.equals(">=") && val.equals("verdadero")){
+            Dlc = new LineasCodigo("JG mayorigual \n JE mayorigual \n mayorigual: \n MOV " + id + " , 1");
+        }else if(op.equals(">=") && val.equals("falso")){
+            Dlc = new LineasCodigo("JG mayorigual \n JE mayorigual \n mayorigual: \n MOV " + id + " , 0");
+        }else if(op.equals("<=") && val.equals("verdadero")){
+            Dlc = new LineasCodigo("JG menorigual \n JE menorigual \n menorigual: \n MOV " + id + " , 1");
+        }else if(op.equals("<=") && val.equals("falso")){
+            Dlc = new LineasCodigo("JG menorigual \n JE menorigual \n menorigual: \n MOV " + id + " , 0");
+        }else{
+            Dlc = new LineasCodigo("JG diferente \n JE diferente \n diferente: \n MOV " + id + " , " + val);
+        }        
+        Feel.Lineas.add (Dlc);
+    :} |
+    Identificador:id Op_relacional:op Numero :val{:                
+        f.verifCondicion(id,op,val,idright);
+        LineasCodigo Dlc;
+        if(op.equals(">")){
+            Dlc = new LineasCodigo("JG mayor \n mayor: \n MOV " + id + " , " + val);
+        }else if(op.equals("<")){
+            Dlc = new LineasCodigo("JL menor \n menor: \n MOV " + id + " , " + val);
+        }else if(op.equals("==")){
+            Dlc = new LineasCodigo("JE igual \n igual: \n MOV " + id + " , " + val);
+        }else if(op.equals(">=")){
+            Dlc = new LineasCodigo("JG mayorigual \n JE mayorigual \n mayorigual: \n MOV " + id + " , " + val);
+        }else if(op.equals("<=")){
+            Dlc = new LineasCodigo("JG menorigual \n JE menorigual \n menorigual: \n MOV " + id + " , " + val);
+        }else{
+            Dlc = new LineasCodigo("JG diferente \n JE diferente \n diferente: \n MOV " + id + " , " + val);
+        }
+        Feel.Lineas.add(Dlc);
+    :} |
+
+    Identificador:id Op_relacional:op Identificador :val{: 
+        f.verifCondicion(id,op,val,idright);
+        LineasCodigo Dlc;
+        if(op.equals(">")){
+            Dlc = new LineasCodigo("JG mayor \n mayor: \n MOV " + id + " , " + val);
+        }else if(op.equals("<")){
+            Dlc = new LineasCodigo("JL menor \n menor: \n MOV " + id + " , " + val);
+        }else if(op.equals("==")){
+            Dlc = new LineasCodigo("JE igual \n igual: \n MOV " + id + " , " + val);
+        }else if(op.equals(">=")){
+            Dlc = new LineasCodigo("JG mayorigual \n JE mayorigual \n mayorigual: \n MOV " + id + " , " + val);
+        }else if(op.equals("<=")){
+            Dlc = new LineasCodigo("JG menorigual \n JE menorigual \n menorigual: \n MOV " + id + " , " + val);
+        }else{
+            Dlc = new LineasCodigo("JG diferente \n JE diferente \n diferente: \n MOV " + id + " , " + val);
+        }
+        Feel.Lineas.add(Dlc);
+    :} |
+
+    Numero:id Op_relacional:op Numero:val {:
+        f.verifCondicion(id,op,val,idright);
+        LineasCodigo Dlc;
+        if(op.equals(">")){
+            Dlc = new LineasCodigo("JG mayor \n mayor: \n MOV " + id + " , " + val);
+        }else if(op.equals("<")){
+            Dlc = new LineasCodigo("JL menor \n menor: \n MOV " + id + " , " + val);
+        }else if(op.equals("==")){
+            Dlc = new LineasCodigo("JE igual \n igual: \n MOV " + id + " , " + val);
+        }else if(op.equals(">=")){
+            Dlc = new LineasCodigo("JG mayorigual \n JE mayorigual \n mayorigual: \n MOV " + id + " , " + val);
+        }else if(op.equals("<=")){
+            Dlc = new LineasCodigo("JG menorigual \n JE menorigual \n menorigual: \n MOV " + id + " , " + val);
+        }else{
+            Dlc = new LineasCodigo("JG diferente \n JE diferente \n diferente: \n MOV " + id + " , " + val);
+        }
+        Feel.Lineas.add(Dlc); 
+    :}|   
+ 
+    Identificador:id Op_relacional:op Texto :val{:
+        f.verifCondicion(id,op,val,idright);
+    :}    
+;
+SI_NO ::=     
+    Si_No Llave_a SENTENCIA Llave_c |     
+    Si_No Llave_a SENTENCIA Llave_c SENTENCIA |
+    ERRORES_SINO
+;
+MIENTRAS ::=     
+    Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c |
+    Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA |
+    ERRORES_MIENTRAS
+;
+CICLO ::=     
+    Ciclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c |
+    Ciclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA |
+    ERRORES_CICLO
+;
+SENTENCIA_CICLO ::=
+    T_dato:td Identificador:id Igual:op Numero:val P_coma :s1{:
+        f.crearObjeto(id,td,val,idright,idleft);
+        f.verificarTipo(td,val,idright);
+    :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO |
+    Identificador:id Igual:op Numero:val P_coma :s1{:
+        f.añadirValor(id,val,idright+1);        
+    :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO
+;
+DECLARACION_CICLO ::= 
+    Identificador:id Op_asignacion:op Numero :val{:
+        f.agregarValor(id,op,val,idright+1);
+    :} |     
+    Identificador:id Igual:op Numero :val{:
+        f.añadirValor(id,val,idright+1);
+    :} | 
+    Identificador:id Op_incremento :op{:
+        f.agregarValor(id,op,null,idright+1);
+    :}
+;
+RECORRIDO ::=    
+    Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma :s{: 
+        
+    :} | 
+    Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma SENTENCIA :s{: 
+        
+    :} |  
+    Recorrido:td Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma :s{:         
+        f.crearObjeto(id,td,null,idright,idleft);
+        f.setUsingRec(id);
+    :} |        
+    Recorrido:td Identificador:id Igual:op Llave_a:ll_a METODO Llave_c:ll_c P_coma SENTENCIA :s{: 
+        f.crearObjeto();
+    :} |   
+    ERRORES_REC
+;
+METODO ::=
+    Encender Parentesis_a Parentesis_c P_coma |
+    Apagar Parentesis_a Parentesis_c P_coma | 
+    Retroceder Parentesis_a Parentesis_c P_coma |
+    Avanzar Parentesis_a Parentesis_c P_coma |
+    RotarR Parentesis_a Parentesis_c P_coma |
+    RotarL Parentesis_a Parentesis_c P_coma |
+    Encender Parentesis_a Parentesis_c P_coma METODO |
+    Apagar Parentesis_a Parentesis_c P_coma METODO | 
+    Retroceder Parentesis_a Parentesis_c P_coma METODO |
+    Avanzar Parentesis_a Parentesis_c P_coma METODO |
+    RotarR Parentesis_a Parentesis_c P_coma METODO |
+    RotarL Parentesis_a Parentesis_c P_coma METODO
+;
+
+FUNCION ::=
+    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
+    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA |
+    ERRORES_FUNC
+;
+
+ACCION ::=
+    Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
+        f.analizarMetodo(id, idright);
+    :}            
+;
+
+/*---------------------- POSIBLES ERRORES SINTACTICOS DEL LENGUAJE ----------------------*/
+
+ERRORES_DEC ::=
+    T_dato:td P_coma :s{:                    
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} | 
+    T_dato:td P_coma SENTENCIA :s{:                    
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} | 
+
+    T_dato Identificador:id {:                    
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un delimitador [ ; ]");
+        Feel.Errores.add(e);
+    :} | 
+    T_dato Identificador:id {:                    
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un delimitador [ ; ]");
+        Feel.Errores.add(e);
+    :} SENTENCIA | 
+    
+    Identificador:id P_coma :s{:                    
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un tipo de dato.");
+        Feel.Errores.add(e);
+    :} |
+    Identificador:id P_coma SENTENCIA :s{:                    
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un tipo de dato.");
+        Feel.Errores.add(e);
+    :} |
+
+    T_dato:td Igual:op Numero:val P_coma :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Igual:op Numero:val P_coma SENTENCIA :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} |
+    
+    T_dato:td Identificador:id Numero:val P_coma :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Identificador:id Numero:val P_coma SENTENCIA :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} |
+    
+    T_dato:td Identificador:id Igual:op P_coma :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (opright+1) + "\n\tSe esperaba un la asignacion de un valor..");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Identificador:id Igual:op P_coma SENTENCIA :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (opright+1) + "\n\tSe esperaba un la asignacion de un valor..");
+        Feel.Errores.add(e);
+    :} |
+
+    T_dato:td Igual:op Op_booleano:val P_coma :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Igual:op Op_booleano:val P_coma SENTENCIA :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} |
+
+    T_dato:td Identificador:id Op_booleano:val P_coma :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Identificador:id Op_booleano:val P_coma SENTENCIA :s{:            
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} 
+;

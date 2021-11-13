@@ -18,9 +18,9 @@ import java.nio.file.Paths;
 public class Principal {
 
     public static void main(String[] args) throws Exception {
-        String ruta1 = "D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/Lexer.flex";
-        String ruta2 = "D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/LexerCup.flex";
-        String[] rutaS = {"-parser", "Sintax", "D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/Sintax.cup"};
+        String ruta1 = System.getProperty("user.dir")+"/src/intface/Lexer.flex";
+        String ruta2 = System.getProperty("user.dir")+"/src/intface/LexerCup.flex";
+        String[] rutaS = {"-parser", "Sintax", System.getProperty("user.dir")+"/src/intface/Sintax.cup"};
         generar(ruta1, ruta2, rutaS);
     }
 
@@ -31,27 +31,27 @@ public class Principal {
         archivo = new File(ruta2);
         JFlex.Main.generate(archivo);
         java_cup.Main.main(rutaS);
-
-        Path rutaSym = Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/sym.java");
+        //System.out.println("Present Project Directory : "+ System.getProperty("user.dir"));
+        Path rutaSym = Paths.get(System.getProperty("user.dir")+"/src/intface/sym.java");
 
         if (Files.exists(rutaSym)) {
             Files.delete(rutaSym);
         }
 
         Files.move(
-                Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/sym.java"),
-                Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/sym.java")
+                Paths.get(System.getProperty("user.dir")+"/sym.java"),
+                Paths.get(System.getProperty("user.dir")+"/src/intface/sym.java")
         );
 
-        Path rutaSin = Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/Sintax.java");
+        Path rutaSin = Paths.get(System.getProperty("user.dir")+"/src/intface/Sintax.java");
 
         if (Files.exists(rutaSin)) {
             Files.delete(rutaSin);
         }
 
         Files.move(
-                Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/Sintax.java"),
-                Paths.get("D:/ING EN SISTEMAS/9no Semestre/Lenguajes y automatas II/Compilador1/src/intface/Sintax.java")
+                Paths.get(System.getProperty("user.dir")+"/Sintax.java"),
+                Paths.get(System.getProperty("user.dir")+"/src/intface/Sintax.java")
         );
     }
 }

@@ -511,7 +511,7 @@ public class Feel extends javax.swing.JFrame {
         Objetos.clear();
         //Automatas.clear();
         txtSalida.setText("");
-        Lineas.clear();
+        Lineas.clear();        
         try {
             if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
@@ -945,7 +945,7 @@ public class Feel extends javax.swing.JFrame {
                     añadirSimbolo("Delimitador", lexer.lexeme);
                     break;
                 case Punto:
-                    resultado += "  <Punto>\t" + lexer.lexeme + "\n";
+                    resultado += "  <Punto>\t\t" + lexer.lexeme + "\n";
                     añadirSimbolo("Simbolo", lexer.lexeme);
                     break;
                 case Identificador:

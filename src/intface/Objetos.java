@@ -20,7 +20,7 @@ public class Objetos {
     private int linea;
     private int columna;
     
-    private ArrayList<Object> Metodos = new ArrayList<Object>();
+    static private ArrayList<Object> Metodos = new ArrayList<Object>();
 
     public Objetos() {
         this.Nombre = null;
@@ -84,8 +84,8 @@ public class Objetos {
         this.columna = columna;
     }
     
-    public void addMetodo(Object m){
-        this.Metodos.add(m);
+    public static void addMetodo(Object m){
+        Objetos.Metodos.add(m);
     }
     
     public Object getMetodo(int p){

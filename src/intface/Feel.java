@@ -10,6 +10,7 @@ import classes.Tokens;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -54,7 +56,7 @@ public class Feel extends javax.swing.JFrame {
     FileWriter nuevoDoc;
 
     boolean b = false; //Bandera para validar el guardar como
-    boolean d; //Bandera para verificar si hay una variable ya declarada
+    static boolean d; //Bandera para verificar si hay una variable ya declarada
 
     DefaultTableModel dtm; //Se utiliza para manipular la tabla de simbolos (agregar, eliminar, etc).
     TablaSimbolos t = new TablaSimbolos(); //Frame de la tabla de simbolos.
@@ -67,8 +69,9 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<Errores> Errores = new ArrayList<>();//Almacena todos los errores que se van recuperando de los analisis sintactico y semantico.
     public static ArrayList<Objetos> Objetos = new ArrayList<Objetos>(); //Cada una de las variables que se van creando
     public static ArrayList<LineasCodigo> Lineas = new ArrayList<LineasCodigo>();
+    public static ArrayList<LineasCodigo> LineasCond = new ArrayList<LineasCodigo>();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
-    private Objetos tempRec;
+    static Objetos tempRec;
 
     public Feel() {
         initComponents();
@@ -501,9 +504,10 @@ public class Feel extends javax.swing.JFrame {
 
     static ArrayList<String> genErroresL = new ArrayList();
 
-    public String getCodigo() {
-        return codeArea.getText();
+    public static void notificar(Errores error) {
+        Errores.add(error);
     }
+    
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
         btnCInt.setEnabled(false);
         dtm.setRowCount(0);
@@ -511,7 +515,8 @@ public class Feel extends javax.swing.JFrame {
         Objetos.clear();
         //Automatas.clear();
         txtSalida.setText("");
-        Lineas.clear();        
+        Lineas.clear();   
+        LineasCond.clear();
         try {
             if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
@@ -526,7 +531,7 @@ public class Feel extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnCompilarActionPerformed
 
-    public void crearObjeto(Object id, Object td, Object val, int linea, int columna) {
+    public static void crearObjeto(Object id, Object td, Object val, int linea, int columna) {
         d = false;
         for (int i = 0; i < Objetos.size(); i++) {
             if (id.equals(Objetos.get(i).getNombre())) {
@@ -550,19 +555,19 @@ public class Feel extends javax.swing.JFrame {
         }
     }
 
-    private void setUsingRec(Objetos o) {
-        this.tempRec = o;        
+    static void setUsingRec(Objetos o) {
+        Feel.tempRec = o;        
     }
     
-    public void endAsign(){
-        this.tempRec = null;
+    public static void endAsign(){
+        Feel.tempRec = null;
     }
     
-    public void addMetodoRec(Object metodo){
-        this.tempRec.addMetodo(metodo+"()");
+    public static void addMetodoRec(Object metodo){
+        intface.Objetos.addMetodo(metodo+"()");
     }
 
-    private int verifDeclaracion(Object id) {
+    private static int verifDeclaracion(Object id) {
         for (int i = 0; i < Objetos.size(); i++) {
             if (id.equals(Objetos.get(i).getNombre())) {
                 return i;
@@ -571,7 +576,7 @@ public class Feel extends javax.swing.JFrame {
         return -1;
     }
 
-    public void añadirValor(Object id, Object val, int idright) {
+    public static void añadirValor(Object id, Object val, int idright) {
         int obj = verifDeclaracion(id);
         if (obj != -1) {
             if (!analizarAutomata(Objetos.get(obj).getTipo(), val)) {
@@ -586,7 +591,7 @@ public class Feel extends javax.swing.JFrame {
         }
     }
 
-    public void agregarValor(Object id, Object operador, Object val, int idright) {
+    public static void agregarValor(Object id, Object operador, Object val, int idright) {
         int obj = verifDeclaracion(id);
         if (obj != -1) {
             if (!operador.equals("++") && !operador.equals("--")) {
@@ -631,14 +636,14 @@ public class Feel extends javax.swing.JFrame {
         }
     }
 
-    public void verificarTipo(Object tipoDato, Object val, int idright) {
+    public static void verificarTipo(Object tipoDato, Object val, int idright) {
         if (!analizarAutomata(tipoDato, val)) {
             Errores e = new Errores("Error semantico. Linea " + (idright + 1) + "\n\tIncompatibilidad de tipos [ " + val + " ] no puede ser asignado a [ " + tipoDato + " ]");
             Errores.add(e);
         }
     }
 
-    public void verifCondicion(Object id, Object operador, Object valor, int linea) {
+    public static void verifCondicion(Object id, Object operador, Object valor, int linea) {
         int obj = verifDeclaracion(id);
         if (obj != -1) {
             Objetos var = Objetos.get(obj);
@@ -740,7 +745,7 @@ public class Feel extends javax.swing.JFrame {
         }
     }
 
-    public void analizarMetodo(Object id, int linea) {
+    public static void analizarMetodo(Object id, int linea) {
         int pos = verifDeclaracion(id);
         if (pos != -1) {
             if (!Objetos.get(pos).getTipo().equals("recorrido")) {
@@ -761,7 +766,7 @@ public class Feel extends javax.swing.JFrame {
          */
     }
 
-    private boolean analizarAutomata(Object tipoDato, Object val) {
+    private static boolean analizarAutomata(Object tipoDato, Object val) {
         int estado = 1;
         do {
             switch (estado) {
@@ -981,9 +986,9 @@ public class Feel extends javax.swing.JFrame {
     }//GEN-LAST:event_jmLexicoActionPerformed
 
     private void analisisSintactico(String codigo) {
-        String ST = codigo;
-        Sintax s = new Sintax(new LexerCup(new StringReader(ST)), this);
-        try {
+        String ST = codigo;        
+        Sintax s = new Sintax(new LexerCup(new StringReader(ST)));
+        try {                        
             s.parse();
             if (!hayErrores()) {
                 txtSalida.setForeground(new Color(175, 255, 163));
@@ -1168,13 +1173,14 @@ public class Feel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
-
+      
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         codeArea.setText("");
         txtResultado.setText("");
         txtSalida.setText("");
         btnCInt.setEnabled(false);
         Lineas.clear();
+        LineasCond.clear();
         Objetos.clear();
         Errores.clear();
         dtm.setRowCount(0);
@@ -1223,11 +1229,15 @@ public class Feel extends javax.swing.JFrame {
 
     private void btnCIntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIntActionPerformed
         String CodigoIntermedio = "";
-        for (int i = Lineas.size() - 1; i >= 0; i--) {
+        for (int i = 0; i < Lineas.size(); i++) {
             CodigoIntermedio += (Lineas.get(i).getLinea()) + "\n";
             //System.out.println(Lineas.get(i).getLinea());
         }
-
+        CodigoIntermedio += ("goto FIN\n");
+        for(int i = 0; i<LineasCond.size(); i++){
+            CodigoIntermedio += (LineasCond.get(i).getLinea()) + "\n";
+        }
+        CodigoIntermedio += ("FIN:");
         c.setVisible(true);
         c.jtCodigo.setText(CodigoIntermedio);
     }//GEN-LAST:event_btnCIntActionPerformed

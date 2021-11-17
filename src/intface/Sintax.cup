@@ -347,7 +347,7 @@ CICLO ::=
         Feel.Lineas.add(Dlc);
     :} |
     Ciclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c :s{:
-        String codInt = incAux + "\nL"+pilaFin.pop()+":";
+        String codInt = incAux + "\ngoto L"+sentAux+"\nL"+pilaFin.pop()+":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);
     :} SENTENCIA |
@@ -476,20 +476,62 @@ ACCION ::=
     Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
         Feel.analizarMetodo(id, idright);
     :} |
-    Encender Parentesis_a Parentesis_c P_coma |
-    Apagar Parentesis_a Parentesis_c P_coma |
-    Retroceder Parentesis_a Parentesis_c P_coma |
-    Avanzar Parentesis_a Parentesis_c P_coma |
-    RotarR Parentesis_a Parentesis_c P_coma |
-    RotarL Parentesis_a Parentesis_c P_coma |
-    Detener Parentesis_a Parentesis_c P_coma |
-    Encender Parentesis_a Parentesis_c P_coma SENTENCIA |
-    Apagar Parentesis_a Parentesis_c P_coma SENTENCIA |
-    Retroceder Parentesis_a Parentesis_c P_coma SENTENCIA |
-    Avanzar Parentesis_a Parentesis_c P_coma SENTENCIA |
-    RotarR Parentesis_a Parentesis_c P_coma SENTENCIA |
-    RotarL Parentesis_a Parentesis_c P_coma SENTENCIA |
-    Detener Parentesis_a Parentesis_c P_coma SENTENCIA     
+    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    Apagar:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} |
+    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    Apagar:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
+    Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA     
 ;
 
 /*---------------------- POSIBLES ERRORES SINTACTICOS DEL LENGUAJE ----------------------*/

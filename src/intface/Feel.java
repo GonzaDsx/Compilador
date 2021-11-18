@@ -223,6 +223,8 @@ public class Feel extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         menuPR = new javax.swing.JMenuItem();
         jmTblSimbolos = new javax.swing.JMenuItem();
+        jmConnection = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -476,6 +478,19 @@ public class Feel extends javax.swing.JFrame {
         jMenu5.add(jmTblSimbolos);
 
         menuBar.add(jMenu5);
+
+        jmConnection.setForeground(new java.awt.Color(255, 255, 255));
+        jmConnection.setText("Connection");
+
+        jMenuItem5.setText("Bluetooth");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jmConnection.add(jMenuItem5);
+
+        menuBar.add(jmConnection);
 
         jMenu3.setForeground(new java.awt.Color(255, 255, 255));
         jMenu3.setText("Help");
@@ -1245,6 +1260,11 @@ public class Feel extends javax.swing.JFrame {
         c.jtCodigo.setText(CodigoIntermedio);
     }//GEN-LAST:event_btnCIntActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        BT_Connections bt = new BT_Connections();
+        bt.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     private boolean hayErrores() {
         if (Errores.size() > 0) {
             return true;
@@ -1361,12 +1381,14 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenu jmConnection;
     private javax.swing.JMenuItem jmLexico;
     private javax.swing.JMenuItem jmSintactico;
     private javax.swing.JMenuItem jmTblSimbolos;

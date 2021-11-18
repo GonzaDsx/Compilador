@@ -10,7 +10,6 @@ import classes.Tokens;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -70,6 +68,7 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<Objetos> Objetos = new ArrayList<Objetos>(); //Cada una de las variables que se van creando
     public static ArrayList<LineasCodigo> Lineas = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> LineasCond = new ArrayList<LineasCodigo>();
+    public static ArrayList<LineasCodigo> LineasMac = new ArrayList<LineasCodigo>();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
     static Objetos tempRec;
 
@@ -517,6 +516,7 @@ public class Feel extends javax.swing.JFrame {
         txtSalida.setText("");
         Lineas.clear();   
         LineasCond.clear();
+        LineasMac.clear();
         try {
             if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
@@ -1236,6 +1236,9 @@ public class Feel extends javax.swing.JFrame {
         CodigoIntermedio += ("goto FIN\n");
         for(int i = 0; i<LineasCond.size(); i++){
             CodigoIntermedio += (LineasCond.get(i).getLinea()) + "\n";
+        }
+        for(int i = 0; i<LineasMac.size(); i++){
+            CodigoIntermedio += (LineasMac.get(i).getLinea()) + "\n";
         }
         CodigoIntermedio += ("FIN:");
         c.setVisible(true);

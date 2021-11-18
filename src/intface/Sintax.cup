@@ -17,6 +17,9 @@ parser code
         Feel.notificar(e);
     }
 
+    public void report_error(String message, Object info){ }    
+    public void report_fatal_error(String message, Object info){ }
+
     public Symbol getS(){        
         return this.s;
     }
@@ -393,65 +396,91 @@ DECLARACION_CICLO ::=
     :}
 ;
 RECORRIDO ::=    
-    Identificador:id Igual Llave_a METODO Llave_c P_coma |
-    Identificador:id Igual Llave_a METODO Llave_c P_coma SENTENCIA |
+    Identificador:id Igual Llave_a {:       
+        LineasCodigo Dlc = new LineasCodigo(""+id+":");
+        Feel.LineasMac.add(Dlc);
+    :} METODO |
 
     Recorrido:td Identificador:id Igual Llave_a :s{: 
         Feel.crearObjeto(id,td,1,idright,idleft); 
+        LineasCodigo Dlc = new LineasCodigo(""+id+":");
+        Feel.LineasMac.add(Dlc);
     :} METODO |
     ERRORES_REC
 ;
+
 METODO ::=
     Encender:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
     Apagar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO | 
     Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
     Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} ENDMETODO |
 
 
     Encender:m Parentesis_a Parentesis_c P_coma:s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO |
     Apagar:m Parentesis_a Parentesis_c P_coma:s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO | 
     Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO |
     Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO |
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO|
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
-        LineasCodigo Dlc = new LineasCodigo(m+"");
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
     :} METODO
 
 ;
@@ -459,10 +488,14 @@ METODO ::=
 ENDMETODO ::=
     Llave_c P_coma:p{: 
         Feel.endAsign(); 
+        LineasCodigo Dlc = new LineasCodigo("RETURN");
+        Feel.LineasMac.add(Dlc);
     :} SENTENCIA |
     
     Llave_c P_coma:p{: 
         Feel.endAsign(); 
+        LineasCodigo Dlc = new LineasCodigo("RETURN");
+        Feel.LineasMac.add(Dlc);
     :}
 ;
 
@@ -475,7 +508,14 @@ FUNCION ::=
 ACCION ::=
     Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
         Feel.analizarMetodo(id, idright);
+        LineasCodigo Dlc = new LineasCodigo("CALL "+id);
+        Feel.Lineas.add(Dlc);
     :} |
+    Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
+        Feel.analizarMetodo(id, idright);
+        LineasCodigo Dlc = new LineasCodigo("CALL "+id);
+        Feel.Lineas.add(Dlc);
+    :} SENTENCIA |
     Encender:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);

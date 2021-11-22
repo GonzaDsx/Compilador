@@ -10,32 +10,18 @@ import classes.Tokens;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.text.*;
+
 import javax.swing.plaf.basic.BasicMenuBarUI;
 import static javax.swing.JOptionPane.*;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Element;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 
 /**
  *
@@ -69,6 +55,8 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<LineasCodigo> Lineas = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> LineasCond = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> LineasMac = new ArrayList<LineasCodigo>();
+    public static ArrayList<LineasCodigo> CodigoObjeto = new ArrayList<LineasCodigo>();
+    public static ArrayList<LineasCodigo> CodObjRec = new ArrayList<LineasCodigo>();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
     static Objetos tempRec;
 
@@ -225,6 +213,7 @@ public class Feel extends javax.swing.JFrame {
         jmTblSimbolos = new javax.swing.JMenuItem();
         jmConnection = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -490,6 +479,14 @@ public class Feel extends javax.swing.JFrame {
         });
         jmConnection.add(jMenuItem5);
 
+        jMenuItem6.setText("Load on Arduino");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jmConnection.add(jMenuItem6);
+
         menuBar.add(jmConnection);
 
         jMenu3.setForeground(new java.awt.Color(255, 255, 255));
@@ -521,65 +518,121 @@ public class Feel extends javax.swing.JFrame {
     public static void notificar(Errores error) {
         Errores.add(error);
     }
-    
-    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+
+    private void clearAll() {
         btnCInt.setEnabled(false);
         dtm.setRowCount(0);
         Errores.clear();
         Objetos.clear();
         //Automatas.clear();
         txtSalida.setText("");
-        Lineas.clear();   
+        Lineas.clear();
         LineasCond.clear();
         LineasMac.clear();
+        CodigoObjeto.clear();
+    }
+
+    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+        long startTime = System.currentTimeMillis();
+        clearAll();
         try {
-            if (!codeArea.getText().equals("")) {
+            if (!codeArea.getText().equals("")) {                
                 analisisLexico(codeArea.getText());
                 analisisSintactico(codeArea.getText());
-                //analisisSemantico();               
+                objCodeHexGenerator();
+                uploadArduinoHex();                
             } else {
                 showMessageDialog(this, "No se encontro ningun codigo para analizar");
             }
         } catch (IOException ex) {
             Logger.getLogger(Feel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        txtSalida.setText(txtSalida.getText() + "\n>> " + elapsedTime + " milisegundos.");
 
     }//GEN-LAST:event_btnCompilarActionPerformed
 
-    public static void crearObjeto(Object id, Object td, Object val, int linea, int columna) {
+    private void objCodeHexGenerator() {
+        String code = "";
+        for (int i = 0; i < CodigoObjeto.size(); i++) {
+            code += CodigoObjeto.get(i).getLinea() + "\n";            
+        }        
+        for (int i = 0; i < CodObjRec.size(); i++) {
+            code += CodObjRec.get(i).getLinea() + "\n";            
+        }
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        try {
+            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/prueba.txt");
+            pw = new PrintWriter(fichero);
+
+            pw.println(code);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Nuevamente aprovechamos el finally para 
+                // asegurarnos que se cierra el fichero.
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadArduinoHex() {
+        try {
+            String command = System.getProperty("user.dir")+"\\HEX\\command.cmd";
+            //showMessageDialog(this, command);
+            Runtime.getRuntime().exec(command);
+        } catch (IOException ioe) {
+            Errores e = new Errores(ioe.toString());
+            Errores.add(e);
+            imprimirErrores();
+        }
+    }
+
+    public static boolean crearObjeto(Object id, Object td, Object val, int linea, int columna) {
         d = false;
         for (int i = 0; i < Objetos.size(); i++) {
             if (id.equals(Objetos.get(i).getNombre())) {
                 Errores e = new Errores("Error semantico. Linea " + (linea + 1) + "\n\tDeclaracion de variable repetida [ " + id + " ]");
                 Errores.add(e);
                 d = true;
-                break;
+                return false;
             }
         }
         if (!d) {
             if (td.toString().equals("recorrido")) {
                 Objetos o = new Objetos(id, td, linea, columna);
                 Objetos.add(o);
-                if(val.toString().equals("1")){
+                if (val.toString().equals("1")) {
                     setUsingRec(o);
+                    return true;
                 }
             } else {
                 Objetos o = new Objetos(id, td, val, linea, columna);
                 Objetos.add(o);
+                return true;
             }
         }
+        return false;
     }
 
     static void setUsingRec(Objetos o) {
-        Feel.tempRec = o;        
+        Feel.tempRec = o;
     }
-    
-    public static void endAsign(){
+
+    public static void endAsign() {
         Feel.tempRec = null;
     }
-    
-    public static void addMetodoRec(Object metodo){
-        intface.Objetos.addMetodo(metodo+"()");
+
+    public static void addMetodoRec(Object metodo) {
+        intface.Objetos.addMetodo(metodo + "()");
     }
 
     private static int verifDeclaracion(Object id) {
@@ -591,71 +644,80 @@ public class Feel extends javax.swing.JFrame {
         return -1;
     }
 
-    public static void añadirValor(Object id, Object val, int idright) {
+    public static boolean añadirValor(Object id, Object val, int idright) {
         int obj = verifDeclaracion(id);
         if (obj != -1) {
             if (!analizarAutomata(Objetos.get(obj).getTipo(), val)) {
                 Errores e = new Errores("Error semantico. Linea " + (idright) + "\n\tIncompatibilidad de tipos [ " + val + " ] no puede ser asignado a [ " + Objetos.get(obj).getTipo() + " ]");
                 Errores.add(e);
+                return false;
             } else {
                 Objetos.get(obj).setValor(val);
+                return true;
             }
         } else {
             Errores e = new Errores("Error Semantico. Linea " + idright + "\n\tNo se declaró la variable [ " + id + " ]");
             Errores.add(e);
+            return false;
         }
     }
 
-    public static void agregarValor(Object id, Object operador, Object val, int idright) {
+    public static boolean agregarValor(Object id, Object operador, Object val, int idright) {
         int obj = verifDeclaracion(id);
         if (obj != -1) {
             if (!operador.equals("++") && !operador.equals("--")) {
                 if (!analizarAutomata(Objetos.get(obj).getTipo(), val)) {
                     Errores e = new Errores("Error semantico. Linea " + (idright) + "\n\tIncompatibilidad de tipos [ " + val + " ] no puede ser asignado a [ " + Objetos.get(obj).getTipo() + " ]");
                     Errores.add(e);
+                    return false;
                 }
             } else {
                 if (Objetos.get(obj).getValor() == null) {
                     Errores e = new Errores("Error semantico. Linea " + (idright) + "\n\tLa variable debe estar inicializada. [ " + val + " ]");
                     Errores.add(e);
+                    return false;
                 } else {
                     switch (operador.toString()) {
                         case "+=":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) + Integer.parseInt(val.toString()));
-                            break;
+                            return true;
                         case "-=":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) - Integer.parseInt(val.toString()));
-                            break;
+                            return true;
                         case "*=":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) * Integer.parseInt(val.toString()));
-                            break;
+                            return true;
                         case "/=":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) / Integer.parseInt(val.toString()));
-                            break;
+                            return true;
                         case "++":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) + 1);
-                            break;
+                            return true;
                         case "--":
                             Objetos.get(obj).setValor(Integer.parseInt(Objetos.get(obj).getValor().toString()) - 1);
-                            break;
+                            return true;
                         default:
                             Errores e = new Errores("Error sintactico. Linea " + (idright) + "\n\tOperador desconocido [ " + operador + " ]");
                             Errores.add(e);
-                            break;
+                            return true;
                     }
                 }
             }
         } else {
             Errores e = new Errores("Error Semantico. Linea " + (idright + 1) + "\n\tNo se declaró la variable [ " + id + " ]");
             Errores.add(e);
+            return false;
         }
+        return false;
     }
 
-    public static void verificarTipo(Object tipoDato, Object val, int idright) {
+    public static boolean verificarTipo(Object tipoDato, Object val, int idright) {
         if (!analizarAutomata(tipoDato, val)) {
             Errores e = new Errores("Error semantico. Linea " + (idright + 1) + "\n\tIncompatibilidad de tipos [ " + val + " ] no puede ser asignado a [ " + tipoDato + " ]");
             Errores.add(e);
+            return false;
         }
+        return true;
     }
 
     public static void verifCondicion(Object id, Object operador, Object valor, int linea) {
@@ -795,6 +857,7 @@ public class Feel extends javax.swing.JFrame {
                             break;
                         case "cadena":
                             estado = 4;
+                            break;
                         default:
                             estado = 0;
                     }
@@ -814,7 +877,7 @@ public class Feel extends javax.swing.JFrame {
                     }
                     break;
                 case 4:
-                    if (val.toString().matches("\\s*\\D*\\s*(\\w|\\s|\\d)*\\s*")) {
+                    if (val.toString().matches("\\s*\"\\s*(\\w|\\s|\\d)*\"")) {
                         estado = 7;
                     } else {
                         estado = 0;
@@ -1001,9 +1064,9 @@ public class Feel extends javax.swing.JFrame {
     }//GEN-LAST:event_jmLexicoActionPerformed
 
     private void analisisSintactico(String codigo) {
-        String ST = codigo;        
+        String ST = codigo;
         Sintax s = new Sintax(new LexerCup(new StringReader(ST)));
-        try {                        
+        try {
             s.parse();
             if (!hayErrores()) {
                 txtSalida.setForeground(new Color(175, 255, 163));
@@ -1188,7 +1251,7 @@ public class Feel extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAbrirActionPerformed
-      
+
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         codeArea.setText("");
         txtResultado.setText("");
@@ -1249,10 +1312,10 @@ public class Feel extends javax.swing.JFrame {
             //System.out.println(Lineas.get(i).getLinea());
         }
         CodigoIntermedio += ("goto FIN\n");
-        for(int i = 0; i<LineasCond.size(); i++){
+        for (int i = 0; i < LineasCond.size(); i++) {
             CodigoIntermedio += (LineasCond.get(i).getLinea()) + "\n";
         }
-        for(int i = 0; i<LineasMac.size(); i++){
+        for (int i = 0; i < LineasMac.size(); i++) {
             CodigoIntermedio += (LineasMac.get(i).getLinea()) + "\n";
         }
         CodigoIntermedio += ("FIN:");
@@ -1264,6 +1327,10 @@ public class Feel extends javax.swing.JFrame {
         BT_Connections bt = new BT_Connections();
         bt.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        uploadArduinoHex();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private boolean hayErrores() {
         if (Errores.size() > 0) {
@@ -1382,6 +1449,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

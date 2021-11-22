@@ -27,11 +27,16 @@ parser code
 
 action code
 {:
+    String codObjeto = "";
     Stack pilaInicio = new Stack();       
     Stack pilaSent = new Stack();       
     Stack pilaFin = new Stack();      
     int i = 1, sentAux;
     String incAux;
+
+    boolean statusDec, statusTipo, statusOp;
+    String auxObj = "";
+    String auxRec = "";
 :};
 
 terminal T_dato, Cadena, Si, Si_No, Caso, Mientras, Ciclo,
@@ -45,7 +50,7 @@ non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_CICLO, SI, SI_NO, ACCIO
     MIENTRAS, CICLO, SENTENCIA_BOOLEANA, SENTENCIA_CICLO, RECORRIDO, METODO,
     SENTENCIA_CLASE, FUNCION, OPERACION, ERRORES_INIT, ERRORES_DEC, ERRORES_SI, 
     ERRORES_SINO, ERRORES_MIENTRAS, ERRORES_CICLO, ERRORES_REC, ERRORES_FUNC,
-    ENDMETODO, FIN_SI, FIN_MIENTRAS, FIN_SINO;
+    ENDMETODO, FIN_SI, FIN_MIENTRAS, FIN_SINO, FIN_CICLO;
 
 start with INICIO;
 
@@ -81,32 +86,61 @@ SENTENCIA ::=
 
 DECLARACION ::=  //check
     T_dato:td Identificador:id P_coma :s{:                    
-        Feel.crearObjeto(id,td,null,idright,idleft);                
+        statusDec = Feel.crearObjeto(id,td,null,idright,idleft); 
+        if(statusDec == true){
+            if(td.equals("entero")){
+                LineasCodigo l = new LineasCodigo("int "+id+";");
+                Feel.CodigoObjeto.add(l);
+            }else{
+                LineasCodigo l = new LineasCodigo("boolean "+id+";");
+                Feel.CodigoObjeto.add(l);
+            }        
+        }        
     :} |
 
     T_dato:td Identificador:id Igual:op Numero:val P_coma :s{:            
-        Feel.crearObjeto(id,td,val,idright,idleft);
-        Feel.verificarTipo(td,val,idright);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
+        statusTipo = Feel.verificarTipo(td,val,idright);
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            if(td.equals("entero")){
+                LineasCodigo l = new LineasCodigo("int "+id+" = " + val + ";");
+                Feel.CodigoObjeto.add(l);
+            }else{
+                LineasCodigo l = new LineasCodigo("boolean "+id+" = " + val + ";");
+                Feel.CodigoObjeto.add(l);
+            }    
+        }            
     :} |
     
     T_dato:td Identificador:id Igual:op Op_booleano:val P_coma :s{:            
-        Feel.crearObjeto(id,td,val,idright,idleft);
-        Feel.verificarTipo(td,val,idright);      
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
+        statusTipo = Feel.verificarTipo(td,val,idright);      
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo l = new LineasCodigo("boolean " + id + " = " + val + ";");
+        }
     :} |
 
     Cadena:td Identificador:id P_coma :s{:
-        Feel.crearObjeto(id,td,null,idright,idleft);                 
+        statusDec = Feel.crearObjeto(id,td,null,idright,idleft);        
+        if(statusDec == true){
+            LineasCodigo l = new LineasCodigo("String "+id+";");
+            Feel.CodigoObjeto.add(l);
+        }
     :} |           
 
     Cadena:td Identificador:id Igual:op Texto:val P_coma :s{:
-        Feel.crearObjeto(id,td,val,idright,idleft);
-        Feel.verificarTipo(td,val,idright);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
+        statusTipo = Feel.verificarTipo(td,val,idright);
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo l = new LineasCodigo("String "+id+" = " + val + ";");
+            Feel.CodigoObjeto.add(l);
+        }
     :} |     
          
     /*Recorrido:td Identificador:id P_coma :s{:
@@ -114,32 +148,62 @@ DECLARACION ::=  //check
     :} |*/                                         
 
     T_dato:td Identificador:id P_coma :s{:            
-        Feel.crearObjeto(id,td,null,idright,idleft);             
+        statusDec = Feel.crearObjeto(id,td,null,idright,idleft);             
+        if(statusDec == true){
+            if(td.equals("entero")){
+                LineasCodigo l = new LineasCodigo("int "+id+";");
+                Feel.CodigoObjeto.add(l);
+            }else{
+                LineasCodigo l = new LineasCodigo("boolean "+id+";");
+                Feel.CodigoObjeto.add(l);
+            }
+        }
     :} SENTENCIA |    
 
     T_dato:td Identificador:id Igual:op Numero:val P_coma:s{:            
-        Feel.crearObjeto(id,td,val,idright,idleft); 
-        Feel.verificarTipo(td,val,idright);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft); 
+        statusTipo = Feel.verificarTipo(td,val,idright);
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            if(td.equals("entero")){
+                LineasCodigo l = new LineasCodigo("int "+id+" = " + val + ";");
+                Feel.CodigoObjeto.add(l);
+            }else{
+                LineasCodigo l = new LineasCodigo("boolean "+id+" = " + val + ";");
+                Feel.CodigoObjeto.add(l);
+            }        
+        }
     :} SENTENCIA |
 
     T_dato:td Identificador:id Igual:op Op_booleano:val P_coma:pc{:
-        Feel.crearObjeto(id,td,val,idright,idleft);
-        Feel.verificarTipo(td,val,idright);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);        
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
+        statusTipo = Feel.verificarTipo(td,val,idright);
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);        
+            LineasCodigo l = new LineasCodigo("boolean " + id + " = " + val + ";");
+            Feel.CodigoObjeto.add(l);
+        }
     :} SENTENCIA |
     
     Cadena:td Identificador:id P_coma:s{:
-        Feel.crearObjeto(id,td,null,idright,idleft);        
+        statusDec = Feel.crearObjeto(id,td,null,idright,idleft);        
+        if(statusDec == true){
+            LineasCodigo l = new LineasCodigo("String "+id+";");
+            Feel.CodigoObjeto.add(l);
+        }
     :} SENTENCIA |     
 
     Cadena:td Identificador:id Igual:op Texto:val P_coma:s{:
-        Feel.crearObjeto(id,td,val,idright,idleft);
-        Feel.verificarTipo(td,val,idright);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
+        statusTipo = Feel.verificarTipo(td,val,idright);
+        if(statusDec == true && statusTipo == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo l = new LineasCodigo("String "+id+" = " + val + ";");
+            Feel.CodigoObjeto.add(l);
+        }
     :} SENTENCIA |     
 
     /*Recorrido:td Identificador:id P_coma:s{:
@@ -153,70 +217,109 @@ DECLARACION ::=  //check
 
 OPERACION ::=
     Identificador:id Igual:op Numero:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }            
     :} |
     
     Identificador:id Igual:op Numero:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);
-        LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} SENTENCIA |
     
     Identificador:id Op_asignacion:op Numero:val P_coma :s{:
-        Feel.agregarValor(id,op,val,idright+1);
-        LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.agregarValor(id,op,val,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} |
     
     Identificador:id Op_asignacion:op Numero:val P_coma :s{:
-        Feel.agregarValor(id,op,val,idright+1);
-        LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.agregarValor(id,op,val,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} SENTENCIA |
     
     Identificador:id Op_incremento:op P_coma :s{:
-        Feel.agregarValor(id,op,null,idright+1);
-        LineasCodigo Dlc;        
-        Dlc = new LineasCodigo(id +""+ op);           
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.agregarValor(id,op,null,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc;        
+            Dlc = new LineasCodigo(id +""+ op);           
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id +""+ op + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} |
     
-    Identificador:id Op_incremento:op P_coma :s{:
-        boolean b = false;
-        Feel.agregarValor(id,op,null,idright+1);
-        LineasCodigo Dlc;
-        Dlc = new LineasCodigo(id +""+ op);           
-        Feel.Lineas.add(Dlc);
+    Identificador:id Op_incremento:op P_coma :s{:        
+        statusOp = Feel.agregarValor(id,op,null,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc;
+            Dlc = new LineasCodigo(id +""+ op);           
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id +""+ op + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} SENTENCIA |
     
     Identificador:id Igual:op Texto:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);
-        LineasCodigo Dlc;
-        Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1); 
+        if(statusOp == true){
+            LineasCodigo Dlc;
+            Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} |
     
     Identificador:id Igual:op Texto:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);            
-        LineasCodigo Dlc;
-        Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1);            
+        if(statusOp == true){
+            LineasCodigo Dlc;
+            Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} SENTENCIA |
     
     Identificador:id Igual:op Op_booleano:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);        
-        LineasCodigo Dlc;
-        Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1);        
+        if(statusOp == true){
+            LineasCodigo Dlc;
+            Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} |
     
     Identificador:id Igual:op Op_booleano:val P_coma :s{:
-        Feel.añadirValor(id,val,idright+1);
-        LineasCodigo Dlc;
-        Dlc = new LineasCodigo(id + " = " + val);
-        Feel.Lineas.add(Dlc);
+        statusOp = Feel.añadirValor(id,val,idright+1);
+        if(statusOp == true){
+            LineasCodigo Dlc;
+            Dlc = new LineasCodigo(id + " = " + val);
+            Feel.Lineas.add(Dlc);
+            LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
+            Feel.CodigoObjeto.add(codObj);
+        }
     :} SENTENCIA
 ;
 
@@ -228,25 +331,37 @@ SI ::=
         i = (int)pilaFin.lastElement()+1;
         String codInt = "goto L" + pilaInicio.lastElement() + "\nL" + pilaSent.lastElement() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);                            
-    :} SENTENCIA_BOOLEANA:sb Parentesis_c Llave_a SENTENCIA FIN_SI 
+        Feel.Lineas.add(Dlc);              
+        auxObj = "if(";        
+    :} SENTENCIA_BOOLEANA:sb Parentesis_c Llave_a{:
+        auxObj += "){";        
+        LineasCodigo codObj = new LineasCodigo(auxObj);
+        Feel.CodigoObjeto.add(codObj);
+        auxObj = "";
+    :} SENTENCIA FIN_SI 
 ;
 
 FIN_SI ::=
     Llave_c :s{:
         String codInt = "goto L" + pilaFin.lastElement() + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);               
+        Feel.Lineas.add(Dlc);                
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
     :} |
     Llave_c :s{:
         String codInt = "goto L" + pilaFin.lastElement() + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);       
+        Feel.Lineas.add(Dlc);               
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA |
     Llave_c :s{:
         String codInt = "goto L" + i + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);       
+        Feel.Lineas.add(Dlc);               
+        LineasCodigo codObj = new LineasCodigo("else{");
+        Feel.CodigoObjeto.add(codObj);
     :} SI_NO
 ;
 
@@ -259,6 +374,7 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
+        auxObj += id.toString() + op.toString() + val.toString();
     :} |
     Identificador:id Op_relacional:op Numero :val{:                
         Feel.verifCondicion(id,op,val,idright);
@@ -267,6 +383,7 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
+        auxObj += id.toString() + op.toString() + val.toString();
     :} |
 
     Identificador:id Op_relacional:op Identificador :val{: 
@@ -276,6 +393,7 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
+        auxObj += id.toString() + op.toString() + val.toString();
     :} |
 
     Numero:id Op_relacional:op Numero:val {:
@@ -285,6 +403,7 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
+        auxObj += id.toString() + op.toString() + val.toString();
     :}|   
  
     Identificador:id Op_relacional:op Texto :val{:
@@ -294,6 +413,7 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
+        auxObj += id.toString() + op.toString() + val.toString();
     :}    
 ;
 
@@ -307,12 +427,16 @@ FIN_SINO ::=
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc); 
         i++;
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
     :} |
     Llave_c :s{:
         String codInt = "goto L" + i + "\nL" + i + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc); 
         i++;
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA |
     ERRORES_SINO
 ;
@@ -326,7 +450,12 @@ MIENTRAS ::=
         String codInt = "goto L" + pilaInicio.lastElement() + "\nL" + pilaSent.lastElement() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);
-    :} SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA FIN_MIENTRAS |    
+        auxObj = "while(";
+    :} SENTENCIA_BOOLEANA Parentesis_c Llave_a{:
+        auxObj += "){";
+        LineasCodigo codObj = new LineasCodigo(auxObj);
+        Feel.CodigoObjeto.add(codObj);
+    :} SENTENCIA FIN_MIENTRAS |    
     ERRORES_MIENTRAS
 ;
 
@@ -335,27 +464,48 @@ FIN_MIENTRAS ::=
         String codInt = "goto L" + sentAux + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);               
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
+        auxObj="";
     :} |    
     Llave_c:s{:
         String codInt = "goto L" + sentAux + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);               
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
+        auxObj="";
     :} SENTENCIA
 ;
 
 CICLO ::=     
-    Ciclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c :s{:
-        String codInt = incAux + "\ngoto L"+sentAux+"\nL"+pilaFin.pop()+":";
-        LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);
-    :} |
-    Ciclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c :s{:
-        String codInt = incAux + "\ngoto L"+sentAux+"\nL"+pilaFin.pop()+":";
-        LineasCodigo Dlc = new LineasCodigo(codInt);
-        Feel.Lineas.add(Dlc);
-    :} SENTENCIA |
+    Ciclo Parentesis_a{:
+        auxObj = "for(";
+    :} SENTENCIA_CICLO Parentesis_c Llave_a{:
+        auxObj += "){";
+        LineasCodigo codObj = new LineasCodigo(auxObj);
+        Feel.CodigoObjeto.add(codObj);
+    :} SENTENCIA FIN_CICLO |
     ERRORES_CICLO
 ;
+
+FIN_CICLO ::=
+    Llave_c :s{:
+        String codInt = incAux + "\ngoto L"+sentAux+"\nL"+pilaFin.pop()+":";
+        LineasCodigo Dlc = new LineasCodigo(codInt);
+        Feel.Lineas.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
+    :} |
+    Llave_c :s{:
+        String codInt = incAux + "\ngoto L"+sentAux+"\nL"+pilaFin.pop()+":";
+        LineasCodigo Dlc = new LineasCodigo(codInt);
+        Feel.Lineas.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodigoObjeto.add(codObj);
+    :} SENTENCIA
+;
+
 SENTENCIA_CICLO ::=
     T_dato:td Identificador:id Igual:op Numero:val P_coma :s1{:
         Feel.crearObjeto(id,td,val,idright,idleft);
@@ -368,6 +518,11 @@ SENTENCIA_CICLO ::=
         String codInt = ""+id + op + val + "\ngoto L"+sentAux+"\nL"+(int)pilaSent.lastElement()+":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);
+        if(td.toString().equals("entero")){
+            auxObj += "int " + id.toString() + op.toString() + val.toString()+";";
+        }else if(td.toString().equals("booleano")){
+            auxObj += "boolean " + id.toString() + op.toString() + val.toString()+";";
+        }        
     :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO |
     Identificador:id Igual:op Numero:val P_coma :s1{:
         Feel.añadirValor(id,val,idright+1);        
@@ -379,32 +534,44 @@ SENTENCIA_CICLO ::=
         String codInt = ""+id + op + val + "\nL"+(int)pilaSent.lastElement();
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);
+        auxObj += id.toString() + op.toString() + val.toString()+";";
     :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO
 ;
 DECLARACION_CICLO ::= 
     Identificador:id Op_asignacion:op Numero :val{:
         Feel.agregarValor(id,op,val,idright+1);
         incAux = ""+id + op + val;
+        auxObj += ";"+id.toString() + op.toString() + val.toString();
     :} |     
     Identificador:id Igual:op Numero :val{:
         Feel.añadirValor(id,val,idright+1);        
         incAux = ""+id + op + val;
+        auxObj += ";"+id.toString() + op.toString() + val.toString();
     :} | 
     Identificador:id Op_incremento :op{:
         Feel.agregarValor(id,op,null,idright+1);        
         incAux = ""+id + op;
+        auxObj += ";"+id.toString() + op.toString();        
     :}
 ;
 RECORRIDO ::=    
     Identificador:id Igual Llave_a {:       
         LineasCodigo Dlc = new LineasCodigo(""+id+":");
         Feel.LineasMac.add(Dlc);
+        auxRec = "void " + id.toString() + "(){";
+        LineasCodigo codObj = new LineasCodigo(auxRec);
+        Feel.CodObjRec.add(codObj);
+        auxRec = "";
     :} METODO |
 
     Recorrido:td Identificador:id Igual Llave_a :s{: 
         Feel.crearObjeto(id,td,1,idright,idleft); 
         LineasCodigo Dlc = new LineasCodigo(""+id+":");
         Feel.LineasMac.add(Dlc);
+        auxRec = "void " + id.toString() + "(){";
+        LineasCodigo codObj = new LineasCodigo(auxRec);
+        Feel.CodObjRec.add(codObj);
+        auxRec = "";
     :} METODO |
     ERRORES_REC
 ;
@@ -413,37 +580,51 @@ METODO ::=
     Encender:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
-        Feel.LineasMac.add(Dlc);
+        Feel.LineasMac.add(Dlc);        
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     Apagar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO | 
     Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
 
 
@@ -451,36 +632,50 @@ METODO ::=
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO |
     Apagar:m Parentesis_a Parentesis_c P_coma:s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO | 
     Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO |
     Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO |
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO|
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo(m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
     :} METODO
 
 ;
@@ -490,12 +685,16 @@ ENDMETODO ::=
         Feel.endAsign(); 
         LineasCodigo Dlc = new LineasCodigo("RETURN");
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodObjRec.add(codObj);        
     :} SENTENCIA |
     
     Llave_c P_coma:p{: 
         Feel.endAsign(); 
         LineasCodigo Dlc = new LineasCodigo("RETURN");
         Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("}");
+        Feel.CodObjRec.add(codObj);        
     :}
 ;
 

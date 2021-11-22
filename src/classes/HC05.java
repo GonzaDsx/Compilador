@@ -132,14 +132,17 @@ public class HC05 {
 
     public void action1() throws Exception {
         if (hc05device != null) {
+            String[] s = null;
             StreamConnection streamConnection = (StreamConnection) Connector.open(hc05Url);
             OutputStream os = streamConnection.openOutputStream();
-            InputStream is = streamConnection.openInputStream();
-
+            InputStream is = streamConnection.openInputStream();            
             os.write("1".getBytes()); //just send '1' to the device
             os.close();
             is.close();
             streamConnection.close();
+            for (int i = 0; i < 10; i++) {
+                s[i]="";
+            }
         } else {
             System.out.println("connect first");
             

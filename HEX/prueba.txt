@@ -1,0 +1,43 @@
+boolean b = falso;
+int g;
+if(b==verdadero){
+int g2 = 1;
+}
+while(b==falso){
+g = 1;
+int x;
+if(g>0){
+x = 1234561132;
+}
+}
+int x2;
+for(int i=0;g<0;i++){
+x = 0;
+}
+int p;
+void rec(){
+avanzar();
+detener();
+apagar();
+}
+void rec(){
+avanzar();
+detener();
+apagar();
+}
+void rec(){
+avanzar();
+detener();
+apagar();
+}
+void rec(){
+avanzar();
+detener();
+apagar();
+}
+void rec(){
+avanzar();
+detener();
+apagar();
+}
+

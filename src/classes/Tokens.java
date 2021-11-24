@@ -48,5 +48,6 @@ public enum Tokens {
     Inicio,
     Punto,
     Texto,
+    Sensor,
     ERROR    
 }

@@ -31,6 +31,7 @@ caso {lexeme=yytext(); return Caso;}
 entrada {lexeme=yytext(); return Entrada;}
 rotarR {lexeme=yytext(); return RotarR;}
 rotarL {lexeme=yytext(); return RotarL;}
+Sensor {lexeme=yytext(); return Sensor;}
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
 "\n" {lexeme=yytext(); return Linea;}

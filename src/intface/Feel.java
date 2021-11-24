@@ -133,7 +133,7 @@ public class Feel extends javax.swing.JFrame {
                             setCharacterAttributes(wordL, wordR - wordL, attpurple, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(encender|apagar|avanzar|retroceder|rotarL|rotarR|detener)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attblue, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(si|sino|ciclo|mientras|caso)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(si|sino|ciclo|mientras|caso|Sensor)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attorange, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(func|clase|start)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attorange, false);
@@ -530,17 +530,18 @@ public class Feel extends javax.swing.JFrame {
         LineasCond.clear();
         LineasMac.clear();
         CodigoObjeto.clear();
+        CodObjRec.clear();
     }
 
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
         long startTime = System.currentTimeMillis();
         clearAll();
         try {
-            if (!codeArea.getText().equals("")) {                
+            if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
                 analisisSintactico(codeArea.getText());
                 objCodeHexGenerator();
-                uploadArduinoHex();                
+                uploadArduinoHex();
             } else {
                 showMessageDialog(this, "No se encontro ningun codigo para analizar");
             }
@@ -554,17 +555,18 @@ public class Feel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCompilarActionPerformed
 
     private void objCodeHexGenerator() {
-        String code = "";
+        String code = "void loop(){\n";
         for (int i = 0; i < CodigoObjeto.size(); i++) {
-            code += CodigoObjeto.get(i).getLinea() + "\n";            
-        }        
+            code += "\t" + CodigoObjeto.get(i).getLinea() + "\n";
+        }
+        code += "}\n";
         for (int i = 0; i < CodObjRec.size(); i++) {
-            code += CodObjRec.get(i).getLinea() + "\n";            
+            code += CodObjRec.get(i).getLinea() + "\n";
         }
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/prueba.txt");
+            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/objeto.ino");
             pw = new PrintWriter(fichero);
 
             pw.println(code);
@@ -586,7 +588,7 @@ public class Feel extends javax.swing.JFrame {
 
     private void uploadArduinoHex() {
         try {
-            String command = System.getProperty("user.dir")+"\\HEX\\command.cmd";
+            String command = System.getProperty("user.dir") + "\\HEX\\command.cmd";
             //showMessageDialog(this, command);
             Runtime.getRuntime().exec(command);
         } catch (IOException ioe) {
@@ -634,6 +636,10 @@ public class Feel extends javax.swing.JFrame {
     public static void addMetodoRec(Object metodo) {
         intface.Objetos.addMetodo(metodo + "()");
     }
+
+    /*public static void addMetodoRec(Object metodo, int val) {
+        intface.Objetos.addMetodo(metodo + "(" + val + ")");
+    }*/
 
     private static int verifDeclaracion(Object id) {
         for (int i = 0; i < Objetos.size(); i++) {
@@ -1023,6 +1029,10 @@ public class Feel extends javax.swing.JFrame {
                     resultado += "  <Start>\t\t" + lexer.lexeme + "\n";
                     añadirSimbolo("Palabra reservada", lexer.lexeme);
                     break;
+                case Sensor:
+                    resultado += "  <Sensor>\t\t" + lexer.lexeme + "\n";
+                    añadirSimbolo("Palabra reservada", lexer.lexeme);
+                    break;
                 case P_coma:
                     resultado += "  <Punto y coma>\t" + lexer.lexeme + "\n";
                     añadirSimbolo("Delimitador", lexer.lexeme);
@@ -1263,6 +1273,9 @@ public class Feel extends javax.swing.JFrame {
         Errores.clear();
         dtm.setRowCount(0);
         b = false;
+        LineasMac.clear();
+        CodigoObjeto.clear();
+        CodObjRec.clear();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void jmTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmTblSimbolosActionPerformed
@@ -1276,28 +1289,44 @@ public class Feel extends javax.swing.JFrame {
     private void codeAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeAreaKeyTyped
 
     }//GEN-LAST:event_codeAreaKeyTyped
-
+    boolean init = false;
+    int initP, finP;
     private void codeAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeAreaKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
-            codeArea.setCaretPosition(codeArea.getCaretPosition());
-        } else if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
-            codeArea.setCaretPosition(codeArea.getCaretPosition());
-        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            codeArea.setCaretPosition(codeArea.getCaretPosition());
-        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            codeArea.setCaretPosition(codeArea.getCaretPosition());
-        } else if (evt.getKeyCode() == KeyEvent.VK_TAB) {
-            evt.consume();
-            String tab = "  ";
-            int posicion = codeArea.getCaretPosition();
-            Element e = doc.getCharacterElement(posicion);
-            try {
-                doc.insertString(posicion, tab, e.getAttributes());
-            } catch (BadLocationException ex) {
-                showMessageDialog(this, "Error en la posicion del cursor");
-            }
-        } else {
-            colors();
+        if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_C) {
+            showMessageDialog(this, "Control + C");
+            codeArea.copy();
+        } else if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) {
+            //showMessageDialog(this, "Control + V");
+            //codeArea.paste();  
+        }
+
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_LEFT:
+                codeArea.setCaretPosition(codeArea.getCaretPosition());
+                break;
+            case KeyEvent.VK_RIGHT:
+                codeArea.setCaretPosition(codeArea.getCaretPosition());
+                break;
+            case KeyEvent.VK_DOWN:
+                codeArea.setCaretPosition(codeArea.getCaretPosition());
+                break;
+            case KeyEvent.VK_UP:
+                codeArea.setCaretPosition(codeArea.getCaretPosition());
+                break;
+            case KeyEvent.VK_TAB:
+                evt.consume();
+                String tab = "  ";
+                int posicion = codeArea.getCaretPosition();
+                Element e = doc.getCharacterElement(posicion);
+                try {
+                    doc.insertString(posicion, tab, e.getAttributes());
+                } catch (BadLocationException ex) {
+                    showMessageDialog(this, "Error en la posicion del cursor");
+                }
+                break;
+            default:
+                colors();
+                break;
         }
     }//GEN-LAST:event_codeAreaKeyPressed
 

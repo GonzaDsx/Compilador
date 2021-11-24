@@ -80,6 +80,9 @@ espacio=[ ,\t,\r,\n]+
 /* Palabra reservada Start */
 ( start ) {return new Symbol(sym.Start, yychar, yyline, yytext());}
 
+/* Palabra reservada Sensor */
+( Sensor ) {return new Symbol(sym.Sensor, yychar, yyline, yytext());}
+
 /* Operador Igual */
 ( "=" ) {return new Symbol(sym.Igual, yychar, yyline, yytext());}
 

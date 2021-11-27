@@ -142,7 +142,7 @@ public class GeneradorIno {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/objeto.ino");
+            fichero = new FileWriter("C:/Users/DELL/Desktop/Objeto/Sketch/Objeto/Objeto.ino");
             pw = new PrintWriter(fichero);
 
             pw.println(code);

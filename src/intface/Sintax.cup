@@ -370,7 +370,7 @@ FIN_SI ::=
         String codInt = "goto L" + i + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);               
-        LineasCodigo codObj = new LineasCodigo("else{");
+        LineasCodigo codObj = new LineasCodigo("}else{");
         Feel.CodigoObjeto.add(codObj);
     :} SI_NO
 ;

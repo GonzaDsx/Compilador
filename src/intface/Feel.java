@@ -59,7 +59,7 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<LineasCodigo> CodigoObjeto = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> CodObjRec = new ArrayList<LineasCodigo>();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
-    static Objetos tempRec;
+    static Objetos tempRec;    
 
     public Feel() {
         initComponents();
@@ -1193,13 +1193,6 @@ public class Feel extends javax.swing.JFrame {
         analisisSintactico(codeArea.getText());
     }//GEN-LAST:event_jmSintacticoActionPerformed
 
-    private void menuPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRActionPerformed
-        JFrame framePalabras = new JFrame();
-        framePalabras.setSize(800, 100);
-        framePalabras.setTitle("Palabras Reservadas Cuhh");
-        framePalabras.setVisible(true);
-    }//GEN-LAST:event_menuPRActionPerformed
-
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (b == false) {
             if (seleccionar.showDialog(this, "Guardar") == JFileChooser.APPROVE_OPTION) {
@@ -1262,10 +1255,6 @@ public class Feel extends javax.swing.JFrame {
         CodigoObjeto.clear();
         CodObjRec.clear();
     }//GEN-LAST:event_btnNuevoActionPerformed
-
-    private void jmTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmTblSimbolosActionPerformed
-        t.setVisible(true);
-    }//GEN-LAST:event_jmTblSimbolosActionPerformed
 
     private void btnTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTblSimbolosActionPerformed
         t.setVisible(true);
@@ -1345,6 +1334,17 @@ public class Feel extends javax.swing.JFrame {
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         uploadArduinoHex();
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jmTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmTblSimbolosActionPerformed
+        t.setVisible(true);
+    }//GEN-LAST:event_jmTblSimbolosActionPerformed
+
+    private void menuPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRActionPerformed
+        JFrame framePalabras = new JFrame();
+        framePalabras.setSize(800, 100);
+        framePalabras.setTitle("Palabras Reservadas Cuhh");
+        framePalabras.setVisible(true);
+    }//GEN-LAST:event_menuPRActionPerformed
 
     private boolean hayErrores() {
         if (Errores.size() > 0) {

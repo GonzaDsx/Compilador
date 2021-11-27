@@ -24,7 +24,21 @@ void setup(){
 }
 
 void loop(){
+	int mesa = 1;
+	if(mesa==1){
+	mesa1();
+	else{
+	retroceder(10);
+	detener();
+	}
   exit(0); //finaliza el ciclo loop()
+}
+void mesa1(){
+	avanzar(5);
+	detener();
+	rotarR();
+	avanzar(2);
+	detener();
 }
 void avanzar(long t_1x0_0){    
   cx_01_x1 = t_1x0_0*80;

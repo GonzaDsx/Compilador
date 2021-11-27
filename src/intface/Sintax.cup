@@ -830,12 +830,6 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
-    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
-        LineasCodigo Dlc = new LineasCodigo(""+m);
-        Feel.Lineas.add(Dlc);
-        LineasCodigo l = new LineasCodigo(m+"();");
-        Feel.CodigoObjeto.add(l);
-    :} SENTENCIA |
     Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
@@ -868,13 +862,6 @@ ACCION ::=
         Feel.CodigoObjeto.add(l);
     :} |
     
-    Detener:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
-        LineasCodigo Dlc = new LineasCodigo(""+m);
-        Feel.Lineas.add(Dlc);
-        LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
-        Feel.CodigoObjeto.add(l);
-    :} |
-    
     Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
@@ -882,12 +869,18 @@ ACCION ::=
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
 
-    Detener:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+    Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
         Feel.CodigoObjeto.add(l);
-    :} SENTENCIA 
+    :} SENTENCIA |
+    Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+        LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
+        Feel.CodigoObjeto.add(l);
+    :}  
 ;
 
 /*---------------------- POSIBLES ERRORES SINTACTICOS DEL LENGUAJE ----------------------*/

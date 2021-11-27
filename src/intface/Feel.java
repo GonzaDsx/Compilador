@@ -5,6 +5,7 @@
  */
 package intface;
 
+import classes.GeneradorIno;
 import classes.NumeroLinea;
 import classes.Tokens;
 import java.awt.Color;
@@ -516,7 +517,7 @@ public class Feel extends javax.swing.JFrame {
     static ArrayList<String> genErroresL = new ArrayList();
 
     public static void notificar(Errores error) {
-        Errores.add(error);
+        Errores.add(error);        
     }
 
     private void clearAll() {
@@ -535,19 +536,19 @@ public class Feel extends javax.swing.JFrame {
 
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
         long startTime = System.currentTimeMillis();
-        clearAll();
+        clearAll();        
         try {
             if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
-                analisisSintactico(codeArea.getText());
+                analisisSintactico(codeArea.getText());                
                 objCodeHexGenerator();
-                uploadArduinoHex();
+                //uploadArduinoHex();
             } else {
                 showMessageDialog(this, "No se encontro ningun codigo para analizar");
             }
         } catch (IOException ex) {
             Logger.getLogger(Feel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }        
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         txtSalida.setText(txtSalida.getText() + "\n>> " + elapsedTime + " milisegundos.");
@@ -555,42 +556,27 @@ public class Feel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCompilarActionPerformed
 
     private void objCodeHexGenerator() {
-        String code = "void loop(){\n";
+        String code = "";
         for (int i = 0; i < CodigoObjeto.size(); i++) {
             code += "\t" + CodigoObjeto.get(i).getLinea() + "\n";
         }
-        code += "}\n";
+        code += "  exit(0); //finaliza el ciclo loop()\n"
+              + "}\n";
         for (int i = 0; i < CodObjRec.size(); i++) {
             code += CodObjRec.get(i).getLinea() + "\n";
-        }
-        FileWriter fichero = null;
-        PrintWriter pw = null;
-        try {
-            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/objeto.ino");
-            pw = new PrintWriter(fichero);
-
-            pw.println(code);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // Nuevamente aprovechamos el finally para 
-                // asegurarnos que se cierra el fichero.
-                if (null != fichero) {
-                    fichero.close();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
+        }     
+        GeneradorIno gen = new GeneradorIno(code);
+        gen.generarArchivo();
     }
 
     private void uploadArduinoHex() {
         try {
-            String command = System.getProperty("user.dir") + "\\HEX\\command.cmd";
+            String command = "cmd /c start cmd.exe /K \"" + System.getProperty("user.dir") + "\\HEX\\debug.cmd\"";
+            Process process = Runtime.getRuntime().exec(command);
+            /*String command = System.getProperty("user.dir") + "\\HEX\\debug.cmd";
             //showMessageDialog(this, command);
             Runtime.getRuntime().exec(command);
+            txtSalida.setText(txtSalida.getText()+"\nCodgo HEX generado con exito.");*/
         } catch (IOException ioe) {
             Errores e = new Errores(ioe.toString());
             Errores.add(e);
@@ -640,7 +626,6 @@ public class Feel extends javax.swing.JFrame {
     /*public static void addMetodoRec(Object metodo, int val) {
         intface.Objetos.addMetodo(metodo + "(" + val + ")");
     }*/
-
     private static int verifDeclaracion(Object id) {
         for (int i = 0; i < Objetos.size(); i++) {
             if (id.equals(Objetos.get(i).getNombre())) {

@@ -5,11 +5,12 @@ import java.util.Stack;
 
 parser code
 {:    
-    private Symbol s;    
+    private Symbol s;        
 
     public void syntax_error(Symbol s){
         Errores e = new Errores("Error sintactico. Linea " + (s.right+1) + "\n\tSintaxis no valida [ " + s.value +" ]");
         Feel.notificar(e);
+        report_error("Error de sintaxis",null);
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
@@ -26,7 +27,7 @@ parser code
 :};
 
 action code
-{:
+{:   
     String codObjeto = "";
     Stack pilaInicio = new Stack();       
     Stack pilaSent = new Stack();       
@@ -65,10 +66,7 @@ SENTENCIA_CLASE ::=
     :} | 
     Clase:td Identificador:id Llave_a :s{:
         Feel.crearObjeto(id,td,null,idright,idleft);        
-    :} SENTENCIA Llave_c |
-    error P_coma |
-    error Llave_c
- 
+    :} SENTENCIA Llave_c
 ; 
 
 SENTENCIA ::=     
@@ -79,7 +77,8 @@ SENTENCIA ::=
     RECORRIDO |
     FUNCION |
     OPERACION |
-    ACCION 
+    ACCION |    
+    error Llave_c
 ;
 
 
@@ -223,7 +222,7 @@ DECLARACION ::=  //check
         Feel.Lineas.add(Dlc);
     :} SENTENCIA |        */
   
-    ERRORES_DEC
+    ERRORES_DEC     
 ;
 
 OPERACION ::=
@@ -331,7 +330,7 @@ OPERACION ::=
             LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
             Feel.CodigoObjeto.add(codObj);
         }
-    :} SENTENCIA
+    :} SENTENCIA 
 ;
 
 SI ::=     
@@ -349,7 +348,7 @@ SI ::=
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
         auxObj = "";
-    :} SENTENCIA FIN_SI 
+    :} SENTENCIA FIN_SI
 ;
 
 FIN_SI ::=
@@ -443,7 +442,7 @@ SENTENCIA_BOOLEANA ::=
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
         auxObj += id.toString() + op.toString() + val.toString();
-    :}    
+    :} 
 ;
 
 SI_NO ::=     
@@ -467,7 +466,7 @@ FIN_SINO ::=
         LineasCodigo codObj = new LineasCodigo("}");
         Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA |
-    ERRORES_SINO
+    ERRORES_SINO 
 ;
 MIENTRAS ::=     
     Mientras Parentesis_a:p{:
@@ -485,7 +484,7 @@ MIENTRAS ::=
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA FIN_MIENTRAS |    
-    ERRORES_MIENTRAS
+    ERRORES_MIENTRAS 
 ;
 
 FIN_MIENTRAS ::=
@@ -515,7 +514,7 @@ CICLO ::=
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA FIN_CICLO |
-    ERRORES_CICLO
+    ERRORES_CICLO 
 ;
 
 FIN_CICLO ::=
@@ -532,7 +531,7 @@ FIN_CICLO ::=
         Feel.Lineas.add(Dlc);
         LineasCodigo codObj = new LineasCodigo("}");
         Feel.CodigoObjeto.add(codObj);
-    :} SENTENCIA
+    :} SENTENCIA 
 ;
 
 SENTENCIA_CICLO ::=
@@ -564,7 +563,7 @@ SENTENCIA_CICLO ::=
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);
         auxObj += id.toString() + op.toString() + val.toString()+";";
-    :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO
+    :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO 
 ;
 DECLARACION_CICLO ::= 
     Identificador:id Op_asignacion:op Numero :val{:
@@ -581,7 +580,7 @@ DECLARACION_CICLO ::=
         Feel.agregarValor(id,op,null,idright+1);        
         incAux = ""+id + op;
         auxObj += ";"+id.toString() + op.toString();        
-    :}
+    :} 
 ;
 RECORRIDO ::=    
     Identificador:id Igual Llave_a {:       
@@ -606,7 +605,7 @@ RECORRIDO ::=
 ;
 
 METODO ::=
-    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+    /*Encender:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);        
@@ -633,7 +632,7 @@ METODO ::=
         Feel.LineasMac.add(Dlc);
         LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"();");
         Feel.CodObjRec.add(codObj);        
-    :} ENDMETODO |
+    :} ENDMETODO |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
@@ -657,7 +656,7 @@ METODO ::=
     :} ENDMETODO |
 
 
-    Encender:m Parentesis_a Parentesis_c P_coma:s{:
+    /*Encender:m Parentesis_a Parentesis_c P_coma:s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -684,7 +683,7 @@ METODO ::=
         Feel.LineasMac.add(Dlc);
         LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"();");
         Feel.CodObjRec.add(codObj);        
-    :} METODO |
+    :} METODO |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
@@ -714,6 +713,13 @@ METODO ::=
         LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"("+val+");");
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
+    Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"("+val+");");
+        Feel.CodObjRec.add(codObj);        
+    :} METODO |
     
     Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
         Feel.addMetodoRec(m);
@@ -721,7 +727,14 @@ METODO ::=
         Feel.LineasMac.add(Dlc);
         LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"("+val+");");
         Feel.CodObjRec.add(codObj);        
-    :} ENDMETODO 
+    :} ENDMETODO | 
+    Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"("+val+");");
+        Feel.CodObjRec.add(codObj);        
+    :} METODO 
 ;
 
 ENDMETODO ::=
@@ -739,13 +752,13 @@ ENDMETODO ::=
         Feel.LineasMac.add(Dlc);
         LineasCodigo codObj = new LineasCodigo("}");
         Feel.CodObjRec.add(codObj);        
-    :}
+    :} 
 ;
 
 FUNCION ::=
     Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
     Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA |
-    ERRORES_FUNC
+    ERRORES_FUNC 
 ;
 
 ACCION ::=
@@ -763,7 +776,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(id+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
-    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+    /*Encender:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -786,7 +799,7 @@ ACCION ::=
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
-    :} |
+    :} |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
@@ -805,7 +818,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} |
-    Encender:m Parentesis_a Parentesis_c P_coma :s{:
+    /*Encender:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -828,7 +841,7 @@ ACCION ::=
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
-    :} SENTENCIA |
+    :} SENTENCIA |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);

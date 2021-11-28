@@ -5,8 +5,15 @@
  */
 package classes;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.swing.JOptionPane.*;
 
 /**
  *
@@ -137,30 +144,129 @@ public class GeneradorIno {
             + "  delay(t_x10_1xx0);\n"
             + "}";
 
-    final String ecuhhCode;    
+    final String ecuhhCode;
 
     public GeneradorIno(String ecuhhCode) {
         this.ecuhhCode = ecuhhCode;
     }
 
+    public GeneradorIno(){
+        ecuhhCode = "";
+    }
+    
     public void generarArchivo() {
         String codigoCompleto = codigoInicial
                 + ecuhhCode
                 + codigoFinal;
         escribirArchivo(codigoCompleto);
+    }        
+
+    private String getRoute() {
+        File doc = new File(System.getProperty("user.dir") + "/HEX/ruta.dll");
+        String route = "";
+        try {
+            Scanner obj;
+            obj = new Scanner(doc);
+            while (obj.hasNextLine()) {
+                route += obj.nextLine();
+            }
+            if (!route.equals("")) {
+                String[] cad = route.split(" ");
+                if (!cad[0].equals("1")) {
+
+                    //verificamops que la ruta sea correcta
+                    String newRoute;
+                    do {
+                        newRoute = showInputDialog("Ingresa la ruta para el codigo objeto");
+                    } while (!writeNewRoute(newRoute));
+                    return newRoute;
+                } else {
+                    return cad[1];
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GeneradorIno.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 
+    private String updateDebugInfo(String updatedRoute) {
+        File doc = new File(System.getProperty("user.dir") + "/HEX/debug.bat");
+        String info = "";
+        Scanner obj;
+        try {
+            obj = new Scanner(doc);
+            while (obj.hasNextLine()) {
+                info += obj.nextLine()+"\n";
+            }
+            String[] infoSplit = info.split("\n");
+            String[] thirdLineContents = infoSplit[2].split(" ");
+            String newInfo = infoSplit[0] + "\n" + infoSplit[1] + "\n" + thirdLineContents[0] + " " + thirdLineContents[1] + " " + updatedRoute + "\\Objeto.ino";            
+            return newInfo;
+        } catch (FileNotFoundException ex) {
+            showMessageDialog(null, "Error al escribir el archivo debug.bat");
+        }
+        return "";
+    }
+
+    public boolean writeNewRoute(String ruta) {
+        FileWriter fichero = null;        
+        FileWriter fichero2 = null;        
+        PrintWriter pw = null;        
+        PrintWriter pw2 = null;        
+        try {
+            //Primero escribimos la nueva ruta en el archivo ruta.txt
+            fichero = new FileWriter(System.getProperty("user.dir") + "/HEX/ruta.dll");
+            pw = new PrintWriter(fichero);
+            pw.println("1 " + ruta);                            
+        } catch (Exception e) {
+            showMessageDialog(null, "No se encontró la ruta especificada para el archivo ruta.dll");
+        } finally {
+            try {
+                // Nuevamente aprovechamos el finally para 
+                // asegurarnos que se cierra el fichero.
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }               
+        try {
+            //escribimos la ruta en el archivo debug.bat
+            String debugNewInfo = updateDebugInfo(ruta);            
+            fichero2 = new FileWriter(System.getProperty("user.dir") + "/HEX/debug.bat");
+            pw2 = new PrintWriter(fichero2);
+            pw2.print(debugNewInfo);            
+            return true;
+        } catch (IOException ex) {
+            showMessageDialog(null, "No se encontró la ruta especificada para el archivo debug.bat");
+        } finally {
+            try {
+                // Nuevamente aprovechamos el finally para 
+                // asegurarnos que se cierra el fichero.
+                if (null != fichero2) { //IMPORTANTISIMO VERIFICAR QUE SEA EL FICHERO EN USO; DE LO CONTRARIO, NO SE ESCRIBIRA NINGUN DATO
+                    fichero2.close();                    
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return false;
+    }        
+
     private void escribirArchivo(String code) {
+
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            fichero = new FileWriter("C:/Users/DELL/Desktop/Objeto/Sketch/Objeto/Objeto.ino");
+            //establecemos la ruta donde se generará el archivo
+            fichero = new FileWriter(getRoute() + "/Objeto.ino");
             pw = new PrintWriter(fichero);
-
             pw.println(code);
-
         } catch (Exception e) {
-            e.printStackTrace();
+            showMessageDialog(null, "No se encontró la ruta especificada");
+
         } finally {
             try {
                 // Nuevamente aprovechamos el finally para 

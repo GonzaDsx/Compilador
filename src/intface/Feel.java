@@ -204,6 +204,7 @@ public class Feel extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jmLexico = new javax.swing.JMenuItem();
@@ -223,6 +224,7 @@ public class Feel extends javax.swing.JFrame {
         mainContainer.setBackground(new java.awt.Color(102, 102, 102));
 
         jToolBar1.setBackground(new java.awt.Color(19, 62, 88));
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         btnNuevo.setBackground(new java.awt.Color(19, 62, 88));
@@ -406,6 +408,14 @@ public class Feel extends javax.swing.JFrame {
 
         jMenuItem2.setText("Guardar");
         jMenu1.add(jMenuItem2);
+
+        jMenuItem7.setText("Elegir Ruta");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem7);
 
         menuBar.add(jMenu1);
 
@@ -1346,6 +1356,13 @@ public class Feel extends javax.swing.JFrame {
         framePalabras.setVisible(true);
     }//GEN-LAST:event_menuPRActionPerformed
 
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        GeneradorIno archivos = new GeneradorIno();
+        String ruta = showInputDialog("Ingresa la nueva ruta de destino");
+        archivos.writeNewRoute(ruta);
+        showMessageDialog(this, "Ruta modificada con exito");
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
     private boolean hayErrores() {
         if (Errores.size() > 0) {
             return true;
@@ -1464,6 +1481,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

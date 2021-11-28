@@ -1,3 +1,0 @@
-avrdude -p atmega328p -c arduino -P COM5 -b 115200 -U flash:w:"C:\Users\marlo\Desktop\YOUTUBE\VIDEO3\PROGRAMANDO ARDUINO SIN ARDUINO\prueba\prueba\Debug\prueba.hex":i
-
--p atmega328p -c arduino -P COM3 -b 115200 -U flash:w:"$(ProjectDir)Debug\$(TargetName).hex":i

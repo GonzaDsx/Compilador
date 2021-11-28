@@ -10,6 +10,8 @@ import classes.NumeroLinea;
 import classes.Tokens;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,10 +61,11 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<LineasCodigo> CodigoObjeto = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> CodObjRec = new ArrayList<LineasCodigo>();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
-    static Objetos tempRec;    
+    static Objetos tempRec;
 
     public Feel() {
         initComponents();
+        setIconImage(getIconImage());
         this.pack();
         menuBar.setUI(new BasicMenuBarUI() {
             public void paint(Graphics g, JComponent c) {
@@ -77,6 +80,13 @@ public class Feel extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("eCuhhmpiler");
         dtm = (DefaultTableModel) tblSimbolos.getModel();
+    }
+
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("recursos/icons8-robot-100.png"));
+        return retValue;
     }
 
     // METODO PARA CREAR LAS ULTIMAS CADENAS
@@ -190,6 +200,7 @@ public class Feel extends javax.swing.JFrame {
         btnGuardarComo = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         btnCompilar = new javax.swing.JButton();
+        btnCargarArduino = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         btnTblSimbolos = new javax.swing.JButton();
         btnCInt = new javax.swing.JButton();
@@ -202,16 +213,15 @@ public class Feel extends javax.swing.JFrame {
         txtSalida = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jmNuevo = new javax.swing.JMenuItem();
+        jmGuardar = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jmLexico = new javax.swing.JMenuItem();
         jmSintactico = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        menuPR = new javax.swing.JMenuItem();
         jmTblSimbolos = new javax.swing.JMenuItem();
         jmConnection = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -284,7 +294,7 @@ public class Feel extends javax.swing.JFrame {
 
         btnCompilar.setBackground(new java.awt.Color(19, 62, 88));
         btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-código-30.png"))); // NOI18N
-        btnCompilar.setToolTipText("Run");
+        btnCompilar.setToolTipText("Analizar codigo");
         btnCompilar.setFocusable(false);
         btnCompilar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCompilar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -294,6 +304,19 @@ public class Feel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(btnCompilar);
+
+        btnCargarArduino.setBackground(new java.awt.Color(19, 62, 88));
+        btnCargarArduino.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-upload-30.png"))); // NOI18N
+        btnCargarArduino.setToolTipText("Verificar y subir");
+        btnCargarArduino.setFocusable(false);
+        btnCargarArduino.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCargarArduino.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCargarArduino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarArduinoActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnCargarArduino);
         jToolBar1.add(jSeparator2);
 
         btnTblSimbolos.setBackground(new java.awt.Color(19, 62, 88));
@@ -398,17 +421,34 @@ public class Feel extends javax.swing.JFrame {
         jMenu1.setForeground(new java.awt.Color(255, 255, 255));
         jMenu1.setText("File");
 
-        jMenuItem1.setText("Nuevo");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jmNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-agregar-archivo-30 (1).png"))); // NOI18N
+        jmNuevo.setText("Nuevo");
+        jmNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jmNuevoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(jmNuevo);
 
-        jMenuItem2.setText("Guardar");
-        jMenu1.add(jMenuItem2);
+        jmGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-guardar-todo-30.png"))); // NOI18N
+        jmGuardar.setText("Guardar");
+        jmGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmGuardarActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jmGuardar);
 
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-guardar-como-30.png"))); // NOI18N
+        jMenuItem4.setText("Guardar como..");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-shorten-urls-30.png"))); // NOI18N
         jMenuItem7.setText("Elegir Ruta");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -440,6 +480,7 @@ public class Feel extends javax.swing.JFrame {
         });
         jMenu4.add(jmLexico);
 
+        jmSintactico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-search-property-30.png"))); // NOI18N
         jmSintactico.setText("Sintactico");
         jmSintactico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -448,26 +489,10 @@ public class Feel extends javax.swing.JFrame {
         });
         jMenu4.add(jmSintactico);
 
-        jMenuItem4.setText("Semantico");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem4);
-
         menuBar.add(jMenu4);
 
         jMenu5.setForeground(new java.awt.Color(255, 255, 255));
         jMenu5.setText("Tools");
-
-        menuPR.setText("Palabras Reservadas");
-        menuPR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuPRActionPerformed(evt);
-            }
-        });
-        jMenu5.add(menuPR);
 
         jmTblSimbolos.setText("Tabla de simbolos");
         jmTblSimbolos.addActionListener(new java.awt.event.ActionListener() {
@@ -482,6 +507,7 @@ public class Feel extends javax.swing.JFrame {
         jmConnection.setForeground(new java.awt.Color(255, 255, 255));
         jmConnection.setText("Connection");
 
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-bluetooth-30.png"))); // NOI18N
         jMenuItem5.setText("Bluetooth");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -490,6 +516,7 @@ public class Feel extends javax.swing.JFrame {
         });
         jmConnection.add(jMenuItem5);
 
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-big-data-30.png"))); // NOI18N
         jMenuItem6.setText("Load on Arduino");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -501,7 +528,7 @@ public class Feel extends javax.swing.JFrame {
         menuBar.add(jmConnection);
 
         jMenu3.setForeground(new java.awt.Color(255, 255, 255));
-        jMenu3.setText("Help");
+        jMenu3.setText("About");
 
         jMenuItem3.setText("Desarrolladores");
         jMenu3.add(jMenuItem3);
@@ -527,7 +554,7 @@ public class Feel extends javax.swing.JFrame {
     static ArrayList<String> genErroresL = new ArrayList();
 
     public static void notificar(Errores error) {
-        Errores.add(error);        
+        Errores.add(error);
     }
 
     private void clearAll() {
@@ -544,25 +571,26 @@ public class Feel extends javax.swing.JFrame {
         CodObjRec.clear();
     }
 
-    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+    private void analizar(int btn) {
         long startTime = System.currentTimeMillis();
-        clearAll();        
+        clearAll();
         try {
             if (!codeArea.getText().equals("")) {
                 analisisLexico(codeArea.getText());
-                analisisSintactico(codeArea.getText());                
-                objCodeHexGenerator();
-                //uploadArduinoHex();
+                analisisSintactico(codeArea.getText(), btn);
             } else {
                 showMessageDialog(this, "No se encontro ningun codigo para analizar");
             }
         } catch (IOException ex) {
             Logger.getLogger(Feel.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         txtSalida.setText(txtSalida.getText() + "\n>> " + elapsedTime + " milisegundos.");
+    }
 
+    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+        analizar(0);
     }//GEN-LAST:event_btnCompilarActionPerformed
 
     private void objCodeHexGenerator() {
@@ -571,17 +599,17 @@ public class Feel extends javax.swing.JFrame {
             code += "\t" + CodigoObjeto.get(i).getLinea() + "\n";
         }
         code += "  exit(0); //finaliza el ciclo loop()\n"
-              + "}\n";
+                + "}\n";
         for (int i = 0; i < CodObjRec.size(); i++) {
             code += CodObjRec.get(i).getLinea() + "\n";
-        }     
+        }
         GeneradorIno gen = new GeneradorIno(code);
         gen.generarArchivo();
     }
 
     private void uploadArduinoHex() {
         try {
-            String command = "cmd /c start cmd.exe /K \"" + System.getProperty("user.dir") + "\\HEX\\debug.cmd\"";
+            String command = "cmd /c start cmd.exe /K \"" + System.getProperty("user.dir") + "\\HEX\\debug.bat\"";
             Process process = Runtime.getRuntime().exec(command);
             /*String command = System.getProperty("user.dir") + "\\HEX\\debug.cmd";
             //showMessageDialog(this, command);
@@ -892,9 +920,21 @@ public class Feel extends javax.swing.JFrame {
         } while (true);
     }
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void jmNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmNuevoActionPerformed
+        codeArea.setText("");
+        txtResultado.setText("");
+        txtSalida.setText("");
+        btnCInt.setEnabled(false);
+        Lineas.clear();
+        LineasCond.clear();
+        Objetos.clear();
+        Errores.clear();
+        dtm.setRowCount(0);
+        b = false;
+        LineasMac.clear();
+        CodigoObjeto.clear();
+        CodObjRec.clear();
+    }//GEN-LAST:event_jmNuevoActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
 
@@ -1068,7 +1108,7 @@ public class Feel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jmLexicoActionPerformed
 
-    private void analisisSintactico(String codigo) {
+    private void analisisSintactico(String codigo, int btn) {
         String ST = codigo;
         Sintax s = new Sintax(new LexerCup(new StringReader(ST)));
         try {
@@ -1078,6 +1118,10 @@ public class Feel extends javax.swing.JFrame {
                 //txtSalida.setText(txtSalida.getText() + "\n->Analizado correctamente\n->0 Errores");
                 txtSalida.setText(txtSalida.getText() + ">> Compilacion exitosa");
                 btnCInt.setEnabled(true);
+                objCodeHexGenerator();
+                if (btn == 1) {
+                    uploadArduinoHex();
+                }
             } else {
                 btnCInt.setEnabled(false);
                 txtSalida.setForeground(new Color(255, 251, 1));
@@ -1200,7 +1244,7 @@ public class Feel extends javax.swing.JFrame {
     }*/
 
     private void jmSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSintacticoActionPerformed
-        analisisSintactico(codeArea.getText());
+        analisisSintactico(codeArea.getText(), 0);
     }//GEN-LAST:event_jmSintacticoActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -1311,12 +1355,8 @@ public class Feel extends javax.swing.JFrame {
             default:
                 colors();
                 break;
-        }
+        }        
     }//GEN-LAST:event_codeAreaKeyPressed
-
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void btnCIntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIntActionPerformed
         String CodigoIntermedio = "";
@@ -1342,19 +1382,12 @@ public class Feel extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        uploadArduinoHex();
+        analizar(1);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jmTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmTblSimbolosActionPerformed
         t.setVisible(true);
     }//GEN-LAST:event_jmTblSimbolosActionPerformed
-
-    private void menuPRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPRActionPerformed
-        JFrame framePalabras = new JFrame();
-        framePalabras.setSize(800, 100);
-        framePalabras.setTitle("Palabras Reservadas Cuhh");
-        framePalabras.setVisible(true);
-    }//GEN-LAST:event_menuPRActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         GeneradorIno archivos = new GeneradorIno();
@@ -1362,6 +1395,41 @@ public class Feel extends javax.swing.JFrame {
         archivos.writeNewRoute(ruta);
         showMessageDialog(this, "Ruta modificada con exito");
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void btnCargarArduinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarArduinoActionPerformed
+        analizar(1);
+    }//GEN-LAST:event_btnCargarArduinoActionPerformed
+
+    private void jmGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmGuardarActionPerformed
+        if (b == false) {
+            if (seleccionar.showDialog(this, "Guardar") == JFileChooser.APPROVE_OPTION) {
+                archivo = seleccionar.getSelectedFile();
+                String Documento = codeArea.getText();
+                String mensaje = GuardarArchivo(archivo, Documento);
+                if (mensaje != null) {
+                    showMessageDialog(this, mensaje);
+                } else {
+                    showMessageDialog(this, "Archivo NO compatible");
+                }
+            }
+        } else {
+            String mensaje = GuardarArchivo(archivo, codeArea.getText());
+            showMessageDialog(this, mensaje);
+        }
+    }//GEN-LAST:event_jmGuardarActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        if (seleccionar.showDialog(this, "Guardar") == JFileChooser.APPROVE_OPTION) {
+            archivo = seleccionar.getSelectedFile();
+            String Documento = codeArea.getText();
+            String mensaje = GuardarArchivo(archivo, Documento);
+            if (mensaje != null) {
+                showMessageDialog(this, mensaje);
+            } else {
+                showMessageDialog(this, "Archivo NO compatible");
+            }
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private boolean hayErrores() {
         if (Errores.size() > 0) {
@@ -1464,6 +1532,7 @@ public class Feel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnCInt;
+    private javax.swing.JButton btnCargarArduino;
     private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnGuardarComo;
@@ -1475,8 +1544,6 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
@@ -1489,12 +1556,13 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu jmConnection;
+    private javax.swing.JMenuItem jmGuardar;
     private javax.swing.JMenuItem jmLexico;
+    private javax.swing.JMenuItem jmNuevo;
     private javax.swing.JMenuItem jmSintactico;
     private javax.swing.JMenuItem jmTblSimbolos;
     private javax.swing.JPanel mainContainer;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem menuPR;
     private javax.swing.JScrollPane scrollLines;
     private javax.swing.JTextArea txtResultado;
     private javax.swing.JTextArea txtSalida;

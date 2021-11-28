@@ -5,6 +5,8 @@
  */
 package intface;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JTable;
 
 /**
@@ -18,6 +20,14 @@ public class TablaSimbolos extends javax.swing.JFrame {
      */
     public TablaSimbolos() {
         initComponents();
+        setIconImage(getIconImage());
+    }
+    
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("recursos/icons8-robot-100.png"));
+        return retValue;
     }
 
     public JTable getTabla(){
@@ -38,9 +48,12 @@ public class TablaSimbolos extends javax.swing.JFrame {
         tblSimbolos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Tabla de Símbolos");
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        tblSimbolos.setBackground(new java.awt.Color(0, 51, 102));
+        tblSimbolos.setForeground(new java.awt.Color(255, 255, 0));
         tblSimbolos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

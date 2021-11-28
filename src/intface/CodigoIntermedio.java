@@ -4,6 +4,9 @@
  */
 package intface;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author edsog
@@ -14,9 +17,15 @@ public class CodigoIntermedio extends javax.swing.JFrame {
      */
     public CodigoIntermedio() {
         initComponents();
+        setIconImage(getIconImage());
     }
     
-    
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("recursos/icons8-robot-100.png"));
+        return retValue;
+    }        
     
     /**
      * This method is called from within the constructor to initialize the form.

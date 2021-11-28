@@ -441,7 +441,11 @@ SENTENCIA_BOOLEANA ::=
         codInt += " else goto L" + pilaFin.lastElement();        
         LineasCodigo Dlc = new LineasCodigo(codInt);                                
         Feel.LineasCond.add (Dlc);
-        auxObj += id.toString() + op.toString() + val.toString();
+        if(op.toString().equals("==")){
+            auxObj += id.toString() + ".equals(" + val.toString()+")";
+        }else{
+            auxObj += "!"+id.toString() + ".equals(" + val.toString()+")";
+        }
     :} 
 ;
 

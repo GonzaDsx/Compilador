@@ -5,6 +5,9 @@
  */
 package intface;
 
+import classes.Objetos;
+import classes.Errores;
+import classes.LineasCodigo;
 import classes.GeneradorIno;
 import classes.NumeroLinea;
 import classes.Tokens;
@@ -35,6 +38,8 @@ public class Feel extends javax.swing.JFrame {
     /**
      * Creates new form Feel
      */
+    
+    //CREACION DE VARIABLES GLOBALES
     NumeroLinea lines;
     JFileChooser seleccionar = new JFileChooser();
     File archivo;
@@ -50,6 +55,7 @@ public class Feel extends javax.swing.JFrame {
     JTable tblSimbolos = t.getTabla(); //Tabla de simbolos vinculada a la del jframe de la clase TablaSimbolos
 
     CodigoIntermedio c = new CodigoIntermedio();
+    Gramaticas g = new Gramaticas();
 
     DefaultStyledDocument doc;
 
@@ -60,6 +66,7 @@ public class Feel extends javax.swing.JFrame {
     public static ArrayList<LineasCodigo> LineasMac = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> CodigoObjeto = new ArrayList<LineasCodigo>();
     public static ArrayList<LineasCodigo> CodObjRec = new ArrayList<LineasCodigo>();
+    public static ArrayList Producciones = new ArrayList();
     //private String[] metodos_recorrido = {"encender()", "apagar()", "avanzar()", "retroceder()", "rotarR()", "rotarL()", "detener()"};
     static Objetos tempRec;
 
@@ -203,6 +210,7 @@ public class Feel extends javax.swing.JFrame {
         btnCargarArduino = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         btnTblSimbolos = new javax.swing.JButton();
+        btnGramaticas = new javax.swing.JButton();
         btnCInt = new javax.swing.JButton();
         scrollLines = new javax.swing.JScrollPane();
         codeArea = new javax.swing.JTextPane();
@@ -221,8 +229,9 @@ public class Feel extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jmLexico = new javax.swing.JMenuItem();
         jmSintactico = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
+        jmGramaticas = new javax.swing.JMenu();
         jmTblSimbolos = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jmConnection = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -331,6 +340,19 @@ public class Feel extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(btnTblSimbolos);
+
+        btnGramaticas.setBackground(new java.awt.Color(19, 62, 88));
+        btnGramaticas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-verificar-30.png"))); // NOI18N
+        btnGramaticas.setToolTipText("Gramáticas");
+        btnGramaticas.setFocusable(false);
+        btnGramaticas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnGramaticas.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnGramaticas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGramaticasActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnGramaticas);
 
         btnCInt.setBackground(new java.awt.Color(19, 62, 88));
         btnCInt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-online-coding-30.png"))); // NOI18N
@@ -491,18 +513,28 @@ public class Feel extends javax.swing.JFrame {
 
         menuBar.add(jMenu4);
 
-        jMenu5.setForeground(new java.awt.Color(255, 255, 255));
-        jMenu5.setText("Tools");
+        jmGramaticas.setForeground(new java.awt.Color(255, 255, 255));
+        jmGramaticas.setText("Tools");
 
+        jmTblSimbolos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-lista-de-ingredientes-30.png"))); // NOI18N
         jmTblSimbolos.setText("Tabla de simbolos");
         jmTblSimbolos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmTblSimbolosActionPerformed(evt);
             }
         });
-        jMenu5.add(jmTblSimbolos);
+        jmGramaticas.add(jmTblSimbolos);
 
-        menuBar.add(jMenu5);
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-verificar-30.png"))); // NOI18N
+        jMenuItem1.setText("Gramaticas encontradas");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jmGramaticas.add(jMenuItem1);
+
+        menuBar.add(jmGramaticas);
 
         jmConnection.setForeground(new java.awt.Color(255, 255, 255));
         jmConnection.setText("Connection");
@@ -569,6 +601,7 @@ public class Feel extends javax.swing.JFrame {
         LineasMac.clear();
         CodigoObjeto.clear();
         CodObjRec.clear();
+        Producciones.clear();
     }
 
     private void analizar(int btn) {
@@ -595,6 +628,7 @@ public class Feel extends javax.swing.JFrame {
 
     private void objCodeHexGenerator() {
         String code = "";
+        //SE ENCARGA DE RECUPERAR LAS LINEAS DEL CODIGO INTERMEDIO
         for (int i = 0; i < CodigoObjeto.size(); i++) {
             code += "\t" + CodigoObjeto.get(i).getLinea() + "\n";
         }
@@ -658,7 +692,7 @@ public class Feel extends javax.swing.JFrame {
     }
 
     public static void addMetodoRec(Object metodo) {
-        intface.Objetos.addMetodo(metodo + "()");
+        classes.Objetos.addMetodo(metodo + "()");
     }
 
     /*public static void addMetodoRec(Object metodo, int val) {
@@ -934,6 +968,7 @@ public class Feel extends javax.swing.JFrame {
         LineasMac.clear();
         CodigoObjeto.clear();
         CodObjRec.clear();
+        Producciones.clear();
     }//GEN-LAST:event_jmNuevoActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
@@ -1308,6 +1343,7 @@ public class Feel extends javax.swing.JFrame {
         LineasMac.clear();
         CodigoObjeto.clear();
         CodObjRec.clear();
+        Producciones.clear();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnTblSimbolosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTblSimbolosActionPerformed
@@ -1431,6 +1467,24 @@ public class Feel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void llenarGramaticas(){
+        String gram = "";
+        for (int i = 0; i < Producciones.size(); i++) {
+            gram += Producciones.get(i).toString() + "\n";
+            //System.out.println(Lineas.get(i).getLinea());
+        }                
+        g.setVisible(true);
+        g.jtGramaticas.setText(gram);
+    }
+    
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        llenarGramaticas();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void btnGramaticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGramaticasActionPerformed
+        llenarGramaticas();
+    }//GEN-LAST:event_btnGramaticasActionPerformed
+
     private boolean hayErrores() {
         if (Errores.size() > 0) {
             return true;
@@ -1534,6 +1588,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JButton btnCInt;
     private javax.swing.JButton btnCargarArduino;
     private javax.swing.JButton btnCompilar;
+    private javax.swing.JButton btnGramaticas;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnGuardarComo;
     private javax.swing.JButton btnNuevo;
@@ -1543,7 +1598,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
@@ -1556,6 +1611,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu jmConnection;
+    private javax.swing.JMenu jmGramaticas;
     private javax.swing.JMenuItem jmGuardar;
     private javax.swing.JMenuItem jmLexico;
     private javax.swing.JMenuItem jmNuevo;

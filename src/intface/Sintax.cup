@@ -1,5 +1,8 @@
 package intface;
 
+import classes.Objetos;
+import classes.Errores;
+import classes.LineasCodigo;
 import java_cup.runtime.Symbol;
 import java.util.Stack;
 
@@ -60,11 +63,13 @@ INICIO ::=
 ;
 
 SENTENCIA_CLASE ::=
-    Clase:td Identificador:id Llave_a Llave_c :s{:            
+    Clase:td Identificador:id Llave_a Llave_c :s{:      
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tClase Identificador Llave_a Llave_c");
         Objetos o = new Objetos(id,td,idright,idleft);        
         Feel.Objetos.add(o);        
     :} | 
     Clase:td Identificador:id Llave_a :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tClase Identificador Llave_a Llave_c");
         Feel.crearObjeto(id,td,null,idright,idleft);        
     :} SENTENCIA Llave_c
 ; 
@@ -85,7 +90,8 @@ SENTENCIA ::=
 
 DECLARACION ::=  //check
     T_dato:td Identificador:id P_coma :s{:                    
-        statusDec = Feel.crearObjeto(id,td,null,idright,idleft); 
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador P_coma");
+        statusDec = Feel.crearObjeto(id,td,null,idright,idleft);         
         if(statusDec == true){
             if(td.equals("entero")){
                 LineasCodigo l = new LineasCodigo("int "+id+";");
@@ -97,7 +103,8 @@ DECLARACION ::=  //check
         }        
     :} |
 
-    T_dato:td Identificador:id Igual:op Numero:val P_coma :s{:            
+    T_dato:td Identificador:id Igual:op Numero:val P_coma :s{:       
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador Igual Numero P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
         statusTipo = Feel.verificarTipo(td,val,idright);
         if(statusDec == true && statusTipo == true){
@@ -113,7 +120,8 @@ DECLARACION ::=  //check
         }            
     :} |
     
-    T_dato:td Identificador:id Igual:op Op_booleano:val P_coma :s{:            
+    T_dato:td Identificador:id Igual:op Op_booleano:val P_coma :s{:  
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador Igual Op_booleano P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
         statusTipo = Feel.verificarTipo(td,val,idright);      
         if(statusDec == true && statusTipo == true){            
@@ -130,6 +138,7 @@ DECLARACION ::=  //check
     :} |
 
     Cadena:td Identificador:id P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tCadena Identificador P_coma");
         statusDec = Feel.crearObjeto(id,td,null,idright,idleft);        
         if(statusDec == true){
             LineasCodigo l = new LineasCodigo("String "+id+";");
@@ -138,6 +147,7 @@ DECLARACION ::=  //check
     :} |           
 
     Cadena:td Identificador:id Igual:op Texto:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tCadena Identificador Igual Texto P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
         statusTipo = Feel.verificarTipo(td,val,idright);
         if(statusDec == true && statusTipo == true){
@@ -152,7 +162,8 @@ DECLARACION ::=  //check
         Feel.crearObjeto(id,td,0,idright,idleft);        
     :} |*/                                         
 
-    T_dato:td Identificador:id P_coma :s{:            
+    T_dato:td Identificador:id P_coma :s{:   
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador P_coma");
         statusDec = Feel.crearObjeto(id,td,null,idright,idleft);             
         if(statusDec == true){
             if(td.equals("entero")){
@@ -165,7 +176,8 @@ DECLARACION ::=  //check
         }
     :} SENTENCIA |    
 
-    T_dato:td Identificador:id Igual:op Numero:val P_coma:s{:            
+    T_dato:td Identificador:id Igual:op Numero:val P_coma:s{:  
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador Igual Numero P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft); 
         statusTipo = Feel.verificarTipo(td,val,idright);
         if(statusDec == true && statusTipo == true){
@@ -182,6 +194,7 @@ DECLARACION ::=  //check
     :} SENTENCIA |
 
     T_dato:td Identificador:id Igual:op Op_booleano:val P_coma:pc{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador Igual Op_booleano P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
         statusTipo = Feel.verificarTipo(td,val,idright);
         if(statusDec == true && statusTipo == true){
@@ -198,6 +211,7 @@ DECLARACION ::=  //check
     :} SENTENCIA |
     
     Cadena:td Identificador:id P_coma:s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tCadena Identificador P_coma");
         statusDec = Feel.crearObjeto(id,td,null,idright,idleft);        
         if(statusDec == true){
             LineasCodigo l = new LineasCodigo("String "+id+";");
@@ -206,6 +220,7 @@ DECLARACION ::=  //check
     :} SENTENCIA |     
 
     Cadena:td Identificador:id Igual:op Texto:val P_coma:s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tCadena Identificador Igual Texto P_coma");
         statusDec = Feel.crearObjeto(id,td,val,idright,idleft);
         statusTipo = Feel.verificarTipo(td,val,idright);
         if(statusDec == true && statusTipo == true){
@@ -227,6 +242,7 @@ DECLARACION ::=  //check
 
 OPERACION ::=
     Identificador:id Igual:op Numero:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Numero P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
@@ -237,6 +253,7 @@ OPERACION ::=
     :} |
     
     Identificador:id Igual:op Numero:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Numero P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc = new LineasCodigo(id + " = " + val);
@@ -247,6 +264,7 @@ OPERACION ::=
     :} SENTENCIA |
     
     Identificador:id Op_asignacion:op Numero:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_asignacion Numero P_coma");
         statusOp = Feel.agregarValor(id,op,val,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
@@ -257,6 +275,7 @@ OPERACION ::=
     :} |
     
     Identificador:id Op_asignacion:op Numero:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_asignacion Numero P_coma");
         statusOp = Feel.agregarValor(id,op,val,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc = new LineasCodigo(id + " " + op + " " + val);
@@ -267,6 +286,7 @@ OPERACION ::=
     :} SENTENCIA |
     
     Identificador:id Op_incremento:op P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_incremento P_coma");
         statusOp = Feel.agregarValor(id,op,null,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc;        
@@ -277,7 +297,8 @@ OPERACION ::=
         }
     :} |
     
-    Identificador:id Op_incremento:op P_coma :s{:        
+    Identificador:id Op_incremento:op P_coma :s{:     
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_incremento P_coma");
         statusOp = Feel.agregarValor(id,op,null,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc;
@@ -289,6 +310,7 @@ OPERACION ::=
     :} SENTENCIA |
     
     Identificador:id Igual:op Texto:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Texto P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1); 
         if(statusOp == true){
             LineasCodigo Dlc;
@@ -300,6 +322,7 @@ OPERACION ::=
     :} |
     
     Identificador:id Igual:op Texto:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Texto P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1);            
         if(statusOp == true){
             LineasCodigo Dlc;
@@ -311,6 +334,7 @@ OPERACION ::=
     :} SENTENCIA |
     
     Identificador:id Igual:op Op_booleano:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Op_booleano P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1);        
         if(statusOp == true){
             LineasCodigo Dlc;
@@ -322,6 +346,7 @@ OPERACION ::=
     :} |
     
     Identificador:id Igual:op Op_booleano:val P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Op_booleano P_coma");
         statusOp = Feel.añadirValor(id,val,idright+1);
         if(statusOp == true){
             LineasCodigo Dlc;
@@ -334,7 +359,8 @@ OPERACION ::=
 ;
 
 SI ::=     
-    Si Parentesis_a :pa{:                
+    Si Parentesis_a :pa{:    
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tSi Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c");
         pilaInicio.push(i);
         pilaSent.push(i+1);
         pilaFin.push(i+2);
@@ -367,6 +393,7 @@ FIN_SI ::=
         Feel.CodigoObjeto.add(codObj);
     :} SENTENCIA |
     Llave_c :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tSi_No Llave_a SENTENCIA Llave_c");
         String codInt = "goto L" + i + "\nL" + pilaFin.pop() + ":";
         LineasCodigo Dlc = new LineasCodigo(codInt);
         Feel.Lineas.add(Dlc);               
@@ -377,13 +404,14 @@ FIN_SI ::=
 
 SENTENCIA_BOOLEANA ::= 
     Op_booleano:val {:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tOp_booleano");
         if(val.toString().equals("verdadero")){
             auxObj += "true";
         }else{
             auxObj += "false";
         } 
     :} |
-    Sensor:id Op_relacional:op Numero:val {:
+    Sensor:id Op_relacional:op Numero:val {:        
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
         codInt += " else goto L" + pilaFin.lastElement();        
@@ -391,7 +419,8 @@ SENTENCIA_BOOLEANA ::=
         Feel.LineasCond.add (Dlc);
         auxObj += "Serial.input" + op.toString() + val.toString();
     :} |
-    Identificador:id Op_relacional:op Op_booleano :val{:          
+    Identificador:id Op_relacional:op Op_booleano :val{:   
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_relacional Op_booleano");
         Feel.verifCondicion(id,op,val,idright);
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
@@ -404,7 +433,8 @@ SENTENCIA_BOOLEANA ::=
             auxObj += id.toString() + op.toString() + "false";
         }        
     :} |
-    Identificador:id Op_relacional:op Numero :val{:                
+    Identificador:id Op_relacional:op Numero :val{: 
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_relacional Numero");
         Feel.verifCondicion(id,op,val,idright);
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
@@ -415,6 +445,7 @@ SENTENCIA_BOOLEANA ::=
     :} |
 
     Identificador:id Op_relacional:op Identificador :val{: 
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_relacional Identificador");
         Feel.verifCondicion(id,op,val,idright);
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
@@ -425,6 +456,7 @@ SENTENCIA_BOOLEANA ::=
     :} |
 
     Numero:id Op_relacional:op Numero:val {:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tNumero Op_relacional Numero");
         Feel.verifCondicion(id,op,val,idright);
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
@@ -435,6 +467,7 @@ SENTENCIA_BOOLEANA ::=
     :}|   
  
     Identificador:id Op_relacional:op Texto :val{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_relacional Texto");
         Feel.verifCondicion(id,op,val,idright);
         String codInt = "L"+pilaInicio.pop()+":\n";
         codInt += "if " + id + op + val + " goto L" + pilaSent.pop();
@@ -474,6 +507,7 @@ FIN_SINO ::=
 ;
 MIENTRAS ::=     
     Mientras Parentesis_a:p{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tMientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c");
         pilaInicio.push(i);
         pilaSent.push(i+1);
         pilaFin.push(i+2);
@@ -511,7 +545,8 @@ FIN_MIENTRAS ::=
 ;
 
 CICLO ::=     
-    Ciclo Parentesis_a{:
+    Ciclo Parentesis_a{:    
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tCiclo Parentesis_a SENTENCIA_CICLO Parentesis_c Llave_a SENTENCIA Llave_c");
         auxObj = "for(";
     :} SENTENCIA_CICLO Parentesis_c Llave_a{:
         auxObj += "){";
@@ -540,6 +575,7 @@ FIN_CICLO ::=
 
 SENTENCIA_CICLO ::=
     T_dato:td Identificador:id Igual:op Numero:val P_coma :s1{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tT_dato Identificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO");
         Feel.crearObjeto(id,td,val,idright,idleft);
         Feel.verificarTipo(td,val,idright);        
         pilaInicio.push(i);
@@ -557,6 +593,7 @@ SENTENCIA_CICLO ::=
         }        
     :} SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO |
     Identificador:id Igual:op Numero:val P_coma :s1{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_CICLO");
         Feel.añadirValor(id,val,idright+1);        
         pilaInicio.push(i);
         pilaSent.push(i+1);
@@ -571,23 +608,27 @@ SENTENCIA_CICLO ::=
 ;
 DECLARACION_CICLO ::= 
     Identificador:id Op_asignacion:op Numero :val{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_asignacion Numero");
         Feel.agregarValor(id,op,val,idright+1);
         incAux = ""+id + op + val;
         auxObj += ";"+id.toString() + op.toString() + val.toString();
     :} |     
     Identificador:id Igual:op Numero :val{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Numero");
         Feel.añadirValor(id,val,idright+1);        
         incAux = ""+id + op + val;
         auxObj += ";"+id.toString() + op.toString() + val.toString();
     :} | 
     Identificador:id Op_incremento :op{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Op_incremento");
         Feel.agregarValor(id,op,null,idright+1);        
         incAux = ""+id + op;
         auxObj += ";"+id.toString() + op.toString();        
     :} 
 ;
 RECORRIDO ::=    
-    Identificador:id Igual Llave_a {:       
+    Identificador:id Igual Llave_a {:  
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Igual Llave_a METODO");
         LineasCodigo Dlc = new LineasCodigo(""+id+":");
         Feel.LineasMac.add(Dlc);
         auxRec = "void " + id.toString() + "(){";
@@ -597,6 +638,7 @@ RECORRIDO ::=
     :} METODO |
 
     Recorrido:td Identificador:id Igual Llave_a :s{: 
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRecorrido Identificador Igual Llave_a METODO");
         Feel.crearObjeto(id,td,1,idright,idleft); 
         LineasCodigo Dlc = new LineasCodigo(""+id+":");
         Feel.LineasMac.add(Dlc);
@@ -638,6 +680,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarR Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -645,6 +688,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarL Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -652,6 +696,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tDetener Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -689,6 +734,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} METODO |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarR Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -696,6 +742,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} METODO |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarL Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -703,6 +750,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} METODO |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tDetener Parentesis_a Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -711,6 +759,7 @@ METODO ::=
     :} METODO |
 
     Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tAvanzar Parentesis_a Numero Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -718,6 +767,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO |
     Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tAvanzar Parentesis_a Numero Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -726,6 +776,7 @@ METODO ::=
     :} METODO |
     
     Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRetroceder Parentesis_a Numero Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -733,6 +784,7 @@ METODO ::=
         Feel.CodObjRec.add(codObj);        
     :} ENDMETODO | 
     Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRetroceder Parentesis_a Numero Parentesis_c P_coma");
         Feel.addMetodoRec(m);
         LineasCodigo Dlc = new LineasCodigo("  "+m);
         Feel.LineasMac.add(Dlc);
@@ -760,13 +812,18 @@ ENDMETODO ::=
 ;
 
 FUNCION ::=
-    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
-    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA |
+    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c {:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tFunc Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c");
+    :}|
+    Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA {:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tFunc Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c");
+    :} |
     ERRORES_FUNC 
 ;
 
 ACCION ::=
     Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Punto Start Parentesis_a Parentesis_c P_coma");
         Feel.analizarMetodo(id, idright);
         LineasCodigo Dlc = new LineasCodigo("CALL "+id);
         Feel.Lineas.add(Dlc);        
@@ -774,6 +831,7 @@ ACCION ::=
         Feel.CodigoObjeto.add(l);
     :} |
     Identificador:id Punto Start Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tIdentificador Punto Start Parentesis_a Parentesis_c P_coma");
         Feel.analizarMetodo(id, idright);
         LineasCodigo Dlc = new LineasCodigo("CALL "+id);
         Feel.Lineas.add(Dlc);
@@ -805,18 +863,21 @@ ACCION ::=
         Feel.CodigoObjeto.add(l);
     :} |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarR Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarL Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tDetener Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -841,18 +902,21 @@ ACCION ::=
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |*/
     RotarR:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarR Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
     RotarL:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRotarL Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tDetener Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -860,6 +924,7 @@ ACCION ::=
     :} SENTENCIA |
 
     Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tAvanzar Parentesis_a Numero:val Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
@@ -867,6 +932,7 @@ ACCION ::=
     :} |
     
     Avanzar:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tAvanzar Parentesis_a Numero:val Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
@@ -874,12 +940,14 @@ ACCION ::=
     :} SENTENCIA |
 
     Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRetroceder Parentesis_a Numero:val Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
     Retroceder:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tRetroceder Parentesis_a Numero:val Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m + "(" + val + ");");
@@ -891,73 +959,89 @@ ACCION ::=
 
 ERRORES_DEC ::=
     T_dato:td P_coma :s{:                    
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} | 
-    T_dato:td P_coma SENTENCIA :s{:                    
+    T_dato:td P_coma SENTENCIA :s{:       
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} | 
 
-    T_dato Identificador:id {:                    
+    T_dato Identificador:id {:  
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un delimitador [ ; ]");
         Feel.Errores.add(e);
     :} | 
-    T_dato Identificador:id {:                    
+    T_dato Identificador:id {:    
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un delimitador [ ; ]");
         Feel.Errores.add(e);
     :} SENTENCIA | 
     
-    Identificador:id P_coma :s{:                    
+    Identificador:id P_coma :s{: 
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un tipo de dato.");
         Feel.Errores.add(e);
     :} |
-    Identificador:id P_coma SENTENCIA :s{:                    
+    Identificador:id P_coma SENTENCIA :s{:     
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un tipo de dato.");
         Feel.Errores.add(e);
     :} |
 
-    T_dato:td Igual:op Numero:val P_coma :s{:            
+    T_dato:td Igual:op Numero:val P_coma :s{:        
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Igual Numero P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} |
     T_dato:td Igual:op Numero:val P_coma SENTENCIA :s{:            
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Igual Numero P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} |
     
-    T_dato:td Identificador:id Numero:val P_coma :s{:            
+    T_dato:td Identificador:id Numero:val P_coma :s{:   
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Numero P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
         Feel.Errores.add(e);
     :} |
-    T_dato:td Identificador:id Numero:val P_coma SENTENCIA :s{:            
+    T_dato:td Identificador:id Numero:val P_coma SENTENCIA :s{:     
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Numero P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
         Feel.Errores.add(e);
     :} |
     
-    T_dato:td Identificador:id Igual:op P_coma :s{:            
+    T_dato:td Identificador:id Igual:op P_coma :s{:          
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Igual P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (opright+1) + "\n\tSe esperaba un la asignacion de un valor..");
         Feel.Errores.add(e);
     :} |
-    T_dato:td Identificador:id Igual:op P_coma SENTENCIA :s{:            
+    T_dato:td Identificador:id Igual:op P_coma SENTENCIA :s{:           
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Igual P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (opright+1) + "\n\tSe esperaba un la asignacion de un valor..");
         Feel.Errores.add(e);
     :} |
 
-    T_dato:td Igual:op Op_booleano:val P_coma :s{:            
+    T_dato:td Igual:op Op_booleano:val P_coma :s{:          
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Igual Op_booleano P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} |
-    T_dato:td Igual:op Op_booleano:val P_coma SENTENCIA :s{:            
+    T_dato:td Igual:op Op_booleano:val P_coma SENTENCIA :s{:  
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Igual Op_booleano P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (tdright+1) + "\n\tSe esperaba un identificador.");
         Feel.Errores.add(e);
     :} |
 
-    T_dato:td Identificador:id Op_booleano:val P_coma :s{:            
+    T_dato:td Identificador:id Op_booleano:val P_coma :s{:    
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Op_booleano P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
         Feel.Errores.add(e);
     :} |
-    T_dato:td Identificador:id Op_booleano:val P_coma SENTENCIA :s{:            
+    T_dato:td Identificador:id Op_booleano:val P_coma SENTENCIA :s{: 
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Op_booleano P_coma");
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
         Feel.Errores.add(e);
     :} 

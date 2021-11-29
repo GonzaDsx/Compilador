@@ -21,6 +21,7 @@ public class TablaSimbolos extends javax.swing.JFrame {
     public TablaSimbolos() {
         initComponents();
         setIconImage(getIconImage());
+        setLocationRelativeTo(null);
     }
     
     @Override

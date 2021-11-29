@@ -18,6 +18,7 @@ public class CodigoIntermedio extends javax.swing.JFrame {
     public CodigoIntermedio() {
         initComponents();
         setIconImage(getIconImage());
+        setLocationRelativeTo(null);
     }
     
     @Override

@@ -38,7 +38,6 @@ public class Feel extends javax.swing.JFrame {
     /**
      * Creates new form Feel
      */
-    
     //CREACION DE VARIABLES GLOBALES
     NumeroLinea lines;
     JFileChooser seleccionar = new JFileChooser();
@@ -1395,7 +1394,7 @@ public class Feel extends javax.swing.JFrame {
             default:
                 colors();
                 break;
-        }        
+        }
     }//GEN-LAST:event_codeAreaKeyPressed
 
     private void btnCIntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIntActionPerformed
@@ -1432,8 +1431,12 @@ public class Feel extends javax.swing.JFrame {
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         GeneradorIno archivos = new GeneradorIno();
         String ruta = showInputDialog("Ingresa la nueva ruta de destino");
-        archivos.writeNewRoute(ruta);
-        showMessageDialog(this, "Ruta modificada con exito");
+        if (ruta.equals("")) {
+            showMessageDialog(this, "Ruta no modificada");
+        } else {
+            archivos.writeNewRoute(ruta);
+            showMessageDialog(this, "Ruta modificada con exito");
+        }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void btnCargarArduinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarArduinoActionPerformed
@@ -1471,16 +1474,16 @@ public class Feel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void llenarGramaticas(){
+    private void llenarGramaticas() {
         String gram = "";
         for (int i = 0; i < Producciones.size(); i++) {
             gram += Producciones.get(i).toString() + "\n";
             //System.out.println(Lineas.get(i).getLinea());
-        }                
+        }
         g.setVisible(true);
         g.jtGramaticas.setText(gram);
     }
-    
+
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         llenarGramaticas();
     }//GEN-LAST:event_jMenuItem1ActionPerformed

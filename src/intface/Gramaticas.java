@@ -20,6 +20,7 @@ public class Gramaticas extends javax.swing.JFrame {
     public Gramaticas() {
         initComponents();
         setIconImage(getIconImage());
+        setLocationRelativeTo(null);
     }
     
     @Override

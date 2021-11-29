@@ -149,7 +149,7 @@ public class Feel extends javax.swing.JFrame {
                     if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
                         if (text.substring(wordL, wordR).matches("(\\W)*(entero|decimal|cadena|booleano|recorrido)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attpurple, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(encender|apagar|avanzar|retroceder|rotarL|rotarR|detener)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(encender|apagar|avanzar|retroceder|rotarL|rotarR|detener|espera)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attblue, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(si|sino|ciclo|mientras|caso|Sensor)")) {
                             setCharacterAttributes(wordL, wordR - wordL, attorange, false);
@@ -1021,6 +1021,10 @@ public class Feel extends javax.swing.JFrame {
                     break;
                 case Ciclo:
                     resultado += "  <Reservada Ciclo>\t" + lexer.lexeme + "\n";
+                    añadirSimbolo("Palabra reservada", lexer.lexeme);
+                    break;
+                case Espera:
+                    resultado += "  <Reservada Espera>\t" + lexer.lexeme + "\n";
                     añadirSimbolo("Palabra reservada", lexer.lexeme);
                     break;
                 case Igual:

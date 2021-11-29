@@ -29,6 +29,7 @@ public enum Tokens {
     Entrada,    
     RotarR,
     RotarL,
+    Espera,
     Parentesis_a,
     Parentesis_c,
     Llave_a,

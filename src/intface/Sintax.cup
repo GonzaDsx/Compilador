@@ -52,9 +52,8 @@ terminal T_dato, Cadena, Si, Si_No, Caso, Mientras, Ciclo,
 
 non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_CICLO, SI, SI_NO, ACCION,
     MIENTRAS, CICLO, SENTENCIA_BOOLEANA, SENTENCIA_CICLO, RECORRIDO, METODO,
-    SENTENCIA_CLASE, FUNCION, OPERACION, ERRORES_INIT, ERRORES_DEC, ERRORES_SI, 
-    ERRORES_SINO, ERRORES_MIENTRAS, ERRORES_CICLO, ERRORES_REC, ERRORES_FUNC,
-    ENDMETODO, FIN_SI, FIN_MIENTRAS, FIN_SINO, FIN_CICLO;
+    SENTENCIA_CLASE, FUNCION, OPERACION, ERRORES_INIT, ERRORES_DEC, ERRORES_OP, 
+    ERRORES_ACC, ENDMETODO, FIN_SI, FIN_MIENTRAS, FIN_SINO, FIN_CICLO;
 
 start with INICIO;
 
@@ -76,14 +75,15 @@ SENTENCIA_CLASE ::=
 
 SENTENCIA ::=     
     DECLARACION |    
-    SI |           
+    SI |     
     MIENTRAS |    
     CICLO |
     RECORRIDO |
     FUNCION |
     OPERACION |
     ACCION |    
-    error Llave_c
+    error Llave_c |
+    error P_coma
 ;
 
 
@@ -355,10 +355,11 @@ OPERACION ::=
             LineasCodigo codObj = new LineasCodigo(id + " " + op + " " + val + ";");
             Feel.CodigoObjeto.add(codObj);
         }
-    :} SENTENCIA 
+    :} SENTENCIA |
+    ERRORES_OP
 ;
 
-SI ::=     
+SI ::=         
     Si Parentesis_a :pa{:    
         Feel.Producciones.add("GRAMATICA CORRECTA:\n\tSi Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c");
         pilaInicio.push(i);
@@ -374,7 +375,7 @@ SI ::=
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
         auxObj = "";
-    :} SENTENCIA FIN_SI
+    :} SENTENCIA FIN_SI    
 ;
 
 FIN_SI ::=
@@ -399,7 +400,7 @@ FIN_SI ::=
         Feel.Lineas.add(Dlc);               
         LineasCodigo codObj = new LineasCodigo("}else{");
         Feel.CodigoObjeto.add(codObj);
-    :} SI_NO
+    :} SI_NO 
 ;
 
 SENTENCIA_BOOLEANA ::= 
@@ -502,8 +503,7 @@ FIN_SINO ::=
         i++;
         LineasCodigo codObj = new LineasCodigo("}");
         Feel.CodigoObjeto.add(codObj);
-    :} SENTENCIA |
-    ERRORES_SINO 
+    :} SENTENCIA
 ;
 MIENTRAS ::=     
     Mientras Parentesis_a:p{:
@@ -521,8 +521,7 @@ MIENTRAS ::=
         auxObj += "){";
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
-    :} SENTENCIA FIN_MIENTRAS |    
-    ERRORES_MIENTRAS 
+    :} SENTENCIA FIN_MIENTRAS
 ;
 
 FIN_MIENTRAS ::=
@@ -552,8 +551,7 @@ CICLO ::=
         auxObj += "){";
         LineasCodigo codObj = new LineasCodigo(auxObj);
         Feel.CodigoObjeto.add(codObj);
-    :} SENTENCIA FIN_CICLO |
-    ERRORES_CICLO 
+    :} SENTENCIA FIN_CICLO     
 ;
 
 FIN_CICLO ::=
@@ -646,8 +644,7 @@ RECORRIDO ::=
         LineasCodigo codObj = new LineasCodigo(auxRec);
         Feel.CodObjRec.add(codObj);
         auxRec = "";
-    :} METODO |
-    ERRORES_REC
+    :} METODO 
 ;
 
 METODO ::=
@@ -851,8 +848,7 @@ FUNCION ::=
     :}|
     Func Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c SENTENCIA {:
         Feel.Producciones.add("GRAMATICA CORRECTA:\n\tFunc Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c");
-    :} |
-    ERRORES_FUNC 
+    :} 
 ;
 
 ACCION ::=
@@ -872,7 +868,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(id+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
-    /*Encender:m Parentesis_a Parentesis_c P_coma :s{:
+    Encender:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -884,7 +880,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} |
-    Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
+    /*Retroceder:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -917,7 +913,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} |
-    /*Encender:m Parentesis_a Parentesis_c P_coma :s{:
+    Encender:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -929,7 +925,7 @@ ACCION ::=
         LineasCodigo l = new LineasCodigo(m+"();");
         Feel.CodigoObjeto.add(l);
     :} SENTENCIA |
-    Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
+    /*Avanzar:m Parentesis_a Parentesis_c P_coma :s{:
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");
@@ -1015,11 +1011,34 @@ ACCION ::=
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo("delay(" + val + ");");
         Feel.CodigoObjeto.add(l);
-    :} SENTENCIA
-
+    :} SENTENCIA |
+    ERRORES_ACC
 ;
 
 /*---------------------- POSIBLES ERRORES SINTACTICOS DEL LENGUAJE ----------------------*/
+
+ERRORES_INIT ::=
+    Identificador:id Llave_a Llave_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Llave_a Llave_c");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba la palabra [ Clase ]");
+        Feel.Errores.add(e);
+    :} |
+    Clase:cls Llave_a Llave_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tClase Llave_a Llave_c");
+        Errores e = new Errores("Error sintactico. Linea " + (clsright+1) + "\n\tSe esperaba un identificador.");
+        Feel.Errores.add(e);
+    :} |
+    Clase Identificador:id Llave_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tClase Identificador Llave_c");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba una llave de apertura [ { ]");
+        Feel.Errores.add(e);
+    :} |
+    Clase Identificador:id Llave_a {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tClase Identificador Llave_a");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba una llave de cierre [ } ]");
+        Feel.Errores.add(e);
+    :}
+;
 
 ERRORES_DEC ::=
     T_dato:td P_coma :s{:                    
@@ -1087,6 +1106,16 @@ ERRORES_DEC ::=
         Errores e = new Errores("Error sintactico. Linea " + (opright+1) + "\n\tSe esperaba un la asignacion de un valor..");
         Feel.Errores.add(e);
     :} |
+    T_dato:td Identificador:id Igual:op Texto:txt P_coma {:           
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Igual P_coma");
+        Errores e = new Errores("Error Semántico. Linea " + (idright+1) + "\n\tNo se puede asignar [ "+txt+" ] a un tipo de dato [ "+td+" ]");
+        Feel.Errores.add(e);
+    :} |
+    T_dato:td Identificador:id Igual:op Texto:txt P_coma SENTENCIA {:           
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Identificador Igual P_coma");
+        Errores e = new Errores("Error Semántico. Linea " + (idright+1) + "\n\tNo se puede asignar [ "+txt+" ] a un tipo de dato [ "+td+" ]");
+        Feel.Errores.add(e);
+    :} |
 
     T_dato:td Igual:op Op_booleano:val P_coma :s{:          
         Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tT_dato Igual Op_booleano P_coma");
@@ -1109,4 +1138,350 @@ ERRORES_DEC ::=
         Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
         Feel.Errores.add(e);
     :} 
+;
+
+ERRORES_OP ::=
+    Identificador:id Numero:val P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} |
+    Identificador:id Numero:val P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un operador de asignacion.");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Identificador:id Igual P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Igual P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un valor.");
+        Feel.Errores.add(e);
+    :} |
+    Identificador:id Igual P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Igual P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba un valor.");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Identificador:id Igual Numero {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Igual Numero");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    Identificador:id Igual Numero {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tIdentificador Igual Numero");
+        Errores e = new Errores("Error sintactico. Linea " + (idright+1) + "\n\tSe esperaba delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA
+;
+
+ERRORES_ACC ::=
+    Encender:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |
+    Encender:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Apagar:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |
+    Apagar:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarR:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |
+    RotarR:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarL:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |
+    RotarL:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Notificar:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |
+    Notificar:m Parentesis_c P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+//===============================================================================================================
+
+    Encender:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |
+    Encender:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Apagar:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |
+    Apagar:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarR:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |
+    RotarR:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarL:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |
+    RotarL:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Notificar:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |
+    Notificar:m Parentesis_a P_coma {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_a P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+//===============================================================================================================
+
+    Encender:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    Encender:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEncender Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Apagar:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    Apagar:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tApagar Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarR:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    RotarR:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarR Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    RotarL:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    RotarL:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRotarL Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+    Notificar:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |
+    Notificar:m Parentesis_a Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tNotificar Parentesis_a Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |
+
+//===============================================================================================================
+
+    Avanzar:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |    
+    Avanzar:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Retroceder:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |    
+    Retroceder:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Espera:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} |    
+    Espera:m Numero Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Numero Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [(]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+//===============================================================================================================
+
+    Avanzar:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} |    
+    Avanzar:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Retroceder:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} |    
+    Retroceder:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Espera:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} |    
+    Espera:m Parentesis_a Parentesis_c P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Parentesis_c P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaban parametros.");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+//===============================================================================================================
+
+    Avanzar:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |    
+    Avanzar:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Retroceder:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |    
+    Retroceder:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Espera:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} |    
+    Espera:m Parentesis_a Numero P_coma{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Numero P_coma");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [)]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+//===============================================================================================================
+
+    Avanzar:m Parentesis_a Numero Parentesis_c {:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |    
+    Avanzar:m Parentesis_a Numero Parentesis_c{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tAvanzar Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Retroceder:m Parentesis_a Numero Parentesis_c{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |    
+    Retroceder:m Parentesis_a Numero Parentesis_c{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tRetroceder Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA |    
+
+    Espera:m Parentesis_a Numero Parentesis_c{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} |    
+    Espera:m Parentesis_a Numero Parentesis_c{:
+        Feel.Producciones.add("GRAMATICA INCORRECTA:\n\tEspera Parentesis_a Numero Parentesis_c");
+        Errores e = new Errores("Error sintactico. Linea " + (mright+1) + "\n\tSe esperaba un delimitador [;]");
+        Feel.Errores.add(e);
+    :} SENTENCIA 
 ;

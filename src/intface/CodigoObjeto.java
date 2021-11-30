@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package intface;
 
@@ -9,24 +10,25 @@ import java.awt.Toolkit;
 
 /**
  *
- * @author edsog
+ * @author Gonzalo
  */
-public class CodigoIntermedio extends javax.swing.JFrame {
+public class CodigoObjeto extends javax.swing.JFrame {
+
     /**
-     * Creates new form CodigoIntermedio
+     * Creates new form CodigoObjeto
      */
-    public CodigoIntermedio() {
+    public CodigoObjeto() {
         initComponents();
-        setIconImage(getIconImage());
-        setLocationRelativeTo(null);
+        this.setIconImage(getIconImage());
+        this.setTitle("Codigo objeto");
     }
-    
+
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
                 getImage(ClassLoader.getSystemResource("recursos/icons8-robot-100.png"));
         return retValue;
-    }        
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,22 +41,19 @@ public class CodigoIntermedio extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtCodigo = new javax.swing.JTextArea();
+        txtCodObj = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Codigo intermedio");
 
         jPanel1.setBackground(new java.awt.Color(0, 51, 102));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Codigo Intermedio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 0))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Código Objeto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 0))); // NOI18N
+        jPanel1.setToolTipText("");
 
-        jScrollPane1.setBackground(new java.awt.Color(0, 0, 102));
-
-        jtCodigo.setEditable(false);
-        jtCodigo.setBackground(new java.awt.Color(0, 51, 102));
-        jtCodigo.setColumns(20);
-        jtCodigo.setForeground(new java.awt.Color(255, 255, 0));
-        jtCodigo.setRows(5);
-        jScrollPane1.setViewportView(jtCodigo);
+        txtCodObj.setBackground(new java.awt.Color(0, 51, 102));
+        txtCodObj.setColumns(20);
+        txtCodObj.setForeground(new java.awt.Color(255, 255, 0));
+        txtCodObj.setRows(5);
+        jScrollPane1.setViewportView(txtCodObj);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -62,14 +61,13 @@ public class CodigoIntermedio extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -104,20 +102,20 @@ public class CodigoIntermedio extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CodigoIntermedio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodigoObjeto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CodigoIntermedio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodigoObjeto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CodigoIntermedio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodigoObjeto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CodigoIntermedio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CodigoObjeto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CodigoIntermedio().setVisible(true);
+                new CodigoObjeto().setVisible(true);
             }
         });
     }
@@ -125,6 +123,6 @@ public class CodigoIntermedio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JTextArea jtCodigo;
+    public javax.swing.JTextArea txtCodObj;
     // End of variables declaration//GEN-END:variables
 }

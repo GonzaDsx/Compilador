@@ -33,6 +33,7 @@ rotarR {lexeme=yytext(); return RotarR;}
 rotarL {lexeme=yytext(); return RotarL;}
 Sensor {lexeme=yytext(); return Sensor;}
 espera {lexeme=yytext(); return Espera;}
+notificar {lexeme=yytext(); return Notificar;}
 {espacio} {/*Ignore*/}
 "//".* {/*Ignore*/}
 "\n" {lexeme=yytext(); return Linea;}

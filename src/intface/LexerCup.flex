@@ -86,6 +86,9 @@ espacio=[ ,\t,\r,\n]+
 /* Palabra reservada Espera */
 ( espera ) {return new Symbol(sym.Espera, yychar, yyline, yytext());}
 
+/* Palabra reservada Notificar */
+( notificar ) {return new Symbol(sym.Notificar, yychar, yyline, yytext());}
+
 /* Operador Igual */
 ( "=" ) {return new Symbol(sym.Igual, yychar, yyline, yytext());}
 

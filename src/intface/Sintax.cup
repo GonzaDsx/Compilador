@@ -48,7 +48,7 @@ terminal T_dato, Cadena, Si, Si_No, Caso, Mientras, Ciclo,
     Op_booleano, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Clase, Punto, 
     P_coma, Identificador, Numero, Recorrido, Func, Encender, Apagar, Start,
     Avanzar, Detener, Retroceder, RotarR, RotarL, Texto, TextoSA, TextoSC, Sensor,
-    Espera, ERROR;
+    Espera, Notificar, ERROR;
 
 non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_CICLO, SI, SI_NO, ACCION,
     MIENTRAS, CICLO, SENTENCIA_BOOLEANA, SENTENCIA_CICLO, RECORRIDO, METODO,
@@ -791,6 +791,23 @@ METODO ::=
         LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"("+val+");");
         Feel.CodObjRec.add(codObj);        
     :} METODO |
+    
+    Notificar:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tNotificar Parentesis_a Parentesis_c P_coma");
+        Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
+    :} METODO |
+    Notificar:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tNotificar Parentesis_a Parentesis_c P_coma");
+        Feel.addMetodoRec(m);
+        LineasCodigo Dlc = new LineasCodigo("  "+m);
+        Feel.LineasMac.add(Dlc);
+        LineasCodigo codObj = new LineasCodigo("\t"+m.toString()+"();");
+        Feel.CodObjRec.add(codObj);        
+    :} ENDMETODO |
 
     Espera:m Parentesis_a Numero:val Parentesis_c P_coma :s{:
         Feel.Producciones.add("GRAMATICA CORRECTA:\n\tEspera Parentesis_a Numero Parentesis_c P_coma");
@@ -934,6 +951,20 @@ ACCION ::=
     :} SENTENCIA |
     Detener:m Parentesis_a Parentesis_c P_coma :s{:
         Feel.Producciones.add("GRAMATICA CORRECTA:\n\tDetener Parentesis_a Parentesis_c P_coma");
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+        LineasCodigo l = new LineasCodigo(m+"();");
+        Feel.CodigoObjeto.add(l);
+    :} SENTENCIA |
+    Notificar:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tNotificar Parentesis_a Parentesis_c P_coma");
+        LineasCodigo Dlc = new LineasCodigo(""+m);
+        Feel.Lineas.add(Dlc);
+        LineasCodigo l = new LineasCodigo(m+"();");
+        Feel.CodigoObjeto.add(l);
+    :} |
+    Notificar:m Parentesis_a Parentesis_c P_coma :s{:
+        Feel.Producciones.add("GRAMATICA CORRECTA:\n\tNotificar Parentesis_a Parentesis_c P_coma");
         LineasCodigo Dlc = new LineasCodigo(""+m);
         Feel.Lineas.add(Dlc);
         LineasCodigo l = new LineasCodigo(m+"();");

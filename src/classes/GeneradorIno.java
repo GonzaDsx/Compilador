@@ -146,7 +146,9 @@ public class GeneradorIno {
             + "void no_11ta_0x1(int f_11xx_0010, int t_x10_1xx0){\n"
             + "  tone(sound_xx11_0011, f_11xx_0010);\n"
             + "  delay(t_x10_1xx0);\n"
-            + "}";
+            + "}\n"
+            + "void encender(){}\n"
+            + "void apagar(){}";
 
     final String ecuhhCode;
 

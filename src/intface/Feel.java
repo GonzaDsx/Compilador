@@ -238,7 +238,7 @@ public class Feel extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jmDev = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -588,8 +588,14 @@ public class Feel extends javax.swing.JFrame {
         jMenu3.setForeground(new java.awt.Color(255, 255, 255));
         jMenu3.setText("About");
 
-        jMenuItem3.setText("Desarrolladores");
-        jMenu3.add(jMenuItem3);
+        jmDev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/recursos/icons8-software-developer-30.png"))); // NOI18N
+        jmDev.setText("Desarrolladores");
+        jmDev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmDevActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jmDev);
 
         menuBar.add(jMenu3);
 
@@ -1560,6 +1566,11 @@ public class Feel extends javax.swing.JFrame {
         openCodObj();
     }//GEN-LAST:event_jmCodObjActionPerformed
 
+    private void jmDevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmDevActionPerformed
+        Desarrolladores dev = new Desarrolladores();
+        dev.setVisible(true);
+    }//GEN-LAST:event_jmDevActionPerformed
+
     private boolean hayErrores() {
         if (Errores.size() > 0) {
             return true;
@@ -1674,7 +1685,6 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
@@ -1687,6 +1697,7 @@ public class Feel extends javax.swing.JFrame {
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem jmCodObj;
     private javax.swing.JMenu jmConnection;
+    private javax.swing.JMenuItem jmDev;
     private javax.swing.JMenuItem jmGramaticas;
     private javax.swing.JMenuItem jmGuardar;
     private javax.swing.JMenuItem jmLexico;
